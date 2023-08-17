@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaRegCalendarAlt, FaTimes } from 'react-icons/fa'
+import { FaTimes } from 'react-icons/fa'
 
 const CreatePoll = () => {
   return (
@@ -81,6 +81,13 @@ const CreatePoll = () => {
                 required
               ></textarea>
             </div>
+
+            <button
+              className="h-[48px] w-full block mt-2 px-3 rounded-full text-sm font-bold
+                transition-all duration-300 bg-[#1B5CFE] hover:bg-blue-500"
+            >
+              Create Poll
+            </button>
           </form>
         </div>
       </div>
