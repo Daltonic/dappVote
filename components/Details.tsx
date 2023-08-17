@@ -1,7 +1,12 @@
+import { globalActions } from '@/store/globalSlices'
 import React from 'react'
 import { MdModeEdit } from 'react-icons/md'
+import { useDispatch } from 'react-redux'
 
 const Details = () => {
+  const dispatch = useDispatch()
+  const { setContestModal } = globalActions
+
   return (
     <>
       <div
@@ -35,7 +40,7 @@ const Details = () => {
             className="flex items-center justify-center w-[133px] h-[32px]
                  py-[20px] rounded-[10px] gap-[12px]"
           >
-            <div className="w-[32px] h-[32px] rounded-full bg-[#1B5CFE]"></div>
+            <div className="w-[32px] h-[32px] rounded-full bg-[#1B5CFE]" />
             <p className="text-[14px] font-[500px]">0x5cC...9293</p>
           </div>
 
@@ -63,6 +68,14 @@ const Details = () => {
               Edit poll
             </button>
           </div>
+
+          <button
+            className="text-black h-[45px] w-[148px] rounded-full transition-all duration-300
+            border border-gray-400 bg-white hover:bg-opacity-20 hover:text-white py-2"
+            onClick={() => dispatch(setContestModal('scale-100'))}
+          >
+            Contest
+          </button>
         </div>
       </div>
     </>

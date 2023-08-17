@@ -3,14 +3,12 @@ import { BiUpvote } from 'react-icons/bi'
 
 const Contestants = () => {
   return (
-    <div>
-      <div className="space-y-2">
-        <h1 className="text-center text-[48px] font-[600px]">Contestants</h1>
+    <div className="space-y-2">
+      <h1 className="text-center text-[48px] font-[600px]">Contestants</h1>
 
-        <div className="grid grid-cols-1 xl:flex justify-between items-center pb-10 gap-10 py-2.5 mx-auto">
-          <Contestant />
-          <Contestant />
-        </div>
+      <div className="grid grid-cols-1 xl:grid-cols-2 pb-7 gap-[62px] sm:w-2/3 mx-auto">
+        <Contestant />
+        <Contestant />
       </div>
     </div>
   )

@@ -8,4 +8,7 @@ export const globalActions = {
   setCreateModal: (state: GlobalState, action: PayloadAction<string>) => {
     state.createModal = action.payload
   },
+  setContestModal: (state: GlobalState, action: PayloadAction<string>) => {
+    state.contestModal = action.payload
+  },
 }
