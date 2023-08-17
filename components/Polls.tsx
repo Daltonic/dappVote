@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import React from 'react'
 
 const Polls = () => {
@@ -15,15 +16,14 @@ const Polls = () => {
   )
 }
 const Poll = () => {
+  const navigate = useRouter()
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 mx-auto w-full">
       <div
         className="h-[392px] gap-[10px] md:w-[580px] md:h-[280px]
             grid grid-cols-1 md:flex justify-start w-full"
       >
-        <div
-          className="w-full flex justify-between space-y-0 sm:space-y-2 sm:flex-col md:w-[217px]"
-        >
+        <div className="w-full flex justify-between space-y-0 sm:space-y-2 sm:flex-col md:w-[217px]">
           <img
             src="./assets/images/Rectangle 4.png"
             alt=""
@@ -62,7 +62,12 @@ const Poll = () => {
             </div>
           </div>
 
-          <button className="h-[44px] w-full bg-[#1B5CFE] rounded-full">Enter</button>
+          <button
+            onClick={() => navigate.push('/polls/1')}
+            className="h-[44px] w-full bg-[#1B5CFE] rounded-full"
+          >
+            Enter
+          </button>
         </div>
       </div>
     </div>
