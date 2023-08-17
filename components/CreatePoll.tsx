@@ -1,17 +1,29 @@
+import { globalActions } from '@/store/globalSlices'
+import { RootState } from '@/utils/types'
 import React from 'react'
 import { FaTimes } from 'react-icons/fa'
+import { useDispatch, useSelector } from 'react-redux'
 
 const CreatePoll = () => {
+  const dispatch = useDispatch()
+  const { setCreateModal } = globalActions
+  const { createModal } = useSelector((states: RootState) => states.globalStates)
+
+  const closeModal = () => {
+    dispatch(setCreateModal('scale-0'))
+    console.log('Hello')
+  }
+
   return (
     <div
       className={`fixed top-0 left-0 w-screen h-screen flex items-center justify-center
-    bg-black bg-opacity-50 transform z-50 transition-transform duration-300 scale-100`}
+    bg-black bg-opacity-50 transform z-50 transition-transform duration-300 ${createModal}`}
     >
       <div className="bg-[#0c0c10] text-[#BBBBBB] shadow-lg shadow-[#1B5CFE] rounded-xl w-11/12 md:w-2/5 h-7/12 p-6">
         <div className="flex flex-col">
           <div className="flex flex-row justify-between items-center">
             <p className="font-semibold">Add Poll</p>
-            <button className="border-0 bg-transparent focus:outline-none">
+            <button onClick={closeModal} className="border-0 bg-transparent focus:outline-none">
               <FaTimes />
             </button>
           </div>
@@ -34,7 +46,7 @@ const CreatePoll = () => {
                 className="bg-[#1B5CFE] bg-opacity-20 text-[#4C6AD7]
                 absolute left-[2.5px] py-3 rounded-full px-5 w-48"
               >
-                .
+                <span className="text-transparent">.</span>
               </span>
               <input
                 className="bg-transparent outline-none w-full placeholder-transparent text-sm"
@@ -53,7 +65,7 @@ const CreatePoll = () => {
                 className="bg-[#1B5CFE] bg-opacity-20 text-[#4C6AD7]
                 absolute left-[2.5px] py-3 rounded-full px-5 w-48"
               >
-                .
+                <span className="text-transparent">.</span>
               </span>
               <input
                 className="bg-transparent outline-none w-full placeholder-[#929292] text-sm"
@@ -79,7 +91,7 @@ const CreatePoll = () => {
                 className="bg-transparent outline-none w-full placeholder-[#929292] text-sm"
                 name="banner"
                 required
-              ></textarea>
+              />
             </div>
 
             <button
