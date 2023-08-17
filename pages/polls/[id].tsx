@@ -3,6 +3,7 @@ import Navbar from '@/components/Navbar'
 import Details from '@/components/Details'
 import Contestants from '@/components/Contestants'
 import Head from 'next/head'
+import ContestPoll from '@/components/ContestPoll'
 
 export default function Polls() {
   return (
@@ -17,7 +18,7 @@ export default function Polls() {
           className="absolute inset-0 before:absolute before:inset-0
           before:w-full before:h-full before:bg-[url('/assets/images/bg.jpeg')]
           before:blur-sm before:z-[-1] before:bg-no-repeat before:bg-cover"
-        ></div>
+        />
 
         <section className="relative px-5 py-10 space-y-16 text-white sm:p-10">
           <Navbar />
@@ -25,6 +26,8 @@ export default function Polls() {
           <Contestants />
           <Footer />
         </section>
+
+        <ContestPoll />
       </div>
     </div>
   )
