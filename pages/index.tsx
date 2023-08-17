@@ -1,4 +1,5 @@
 import Banner from '@/components/Banner'
+import CreatePoll from '@/components/CreatePoll'
 import Footer from '@/components/Footer'
 import Navbar from '@/components/Navbar'
 import Polls from '@/components/Polls'
@@ -24,6 +25,7 @@ export default function Home() {
           <Polls />
           <Footer />
         </section>
+        <CreatePoll />
       </div>
     </div>
   )
