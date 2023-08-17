@@ -41,8 +41,8 @@ const Details = () => {
 
           <div className="h-[36px] gap-[4px] flex justify-center items-center">
             <button
-              className="py-[6px] px-[12px] 
-                    border border-gray-400 bg-white bg-opacity-20 rounded-full text-[12px] md:text-[16px]"
+              className="py-[6px] px-[12px] border border-gray-400 bg-white bg-opacity-20
+              rounded-full text-[12px] md:text-[16px]"
             >
               1 Vote
             </button>

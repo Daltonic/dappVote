@@ -64,7 +64,7 @@ const Poll = () => {
 
           <button
             onClick={() => navigate.push('/polls/1')}
-            className="h-[44px] w-full bg-[#1B5CFE] rounded-full"
+            className="h-[44px] w-full rounded-full transition-all duration-300 bg-[#1B5CFE] hover:bg-blue-500"
           >
             Enter
           </button>
