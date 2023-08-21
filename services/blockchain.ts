@@ -3,9 +3,9 @@ import { ethers } from 'ethers'
 import { globalActions } from '@/store/globalSlices'
 import address from '@/artifacts/contractAddress.json'
 import abi from '@/artifacts/contracts/DappVotes.sol/DappVotes.json'
-import { PollParams, TruncateParams } from '@/utils/types'
+import { PollParams, PollStruct, TruncateParams } from '@/utils/types'
 
-const { setWallet } = globalActions
+const { setWallet, setPolls } = globalActions
 const ContractAddress = address.address
 const ContractAbi = abi.abi
 let ethereum: any
@@ -14,9 +14,6 @@ let tx: any
 if (typeof window !== 'undefined') {
   ethereum = (window as any).ethereum
 }
-
-const toWei = (num: number) => ethers.utils.parseEther(num.toString())
-const fromWei = (num: number) => ethers.utils.formatEther(num)
 
 const getEthereumContract = async () => {
   const accounts = await ethereum?.request?.({ method: 'eth_accounts' })
@@ -77,14 +74,19 @@ const createPoll = async (data: PollParams) => {
     const tx = await contract.createPoll(image, title, description, startsAt, endsAt)
 
     await tx.wait()
-    //   const questions = await getQuestions()
-
-    //   store.dispatch(setQuestions(questions))
+    const polls = await getPolls()
+    store.dispatch(setPolls(polls))
     return Promise.resolve(tx)
   } catch (error) {
     reportError(error)
     return Promise.reject(error)
   }
+}
+
+const getPolls = async (): Promise<PollStruct[]> => {
+  const contract = await getEthereumContract()
+  const polls = await contract.getPolls()
+  return structurePolls(polls)
 }
 
 const truncate = ({ text, startChars, endChars, maxLength }: TruncateParams): string => {
@@ -99,4 +101,47 @@ const truncate = ({ text, startChars, endChars, maxLength }: TruncateParams): st
   return text
 }
 
-export { connectWallet, checkWallet, truncate, createPoll }
+const formatDate = (timestamp: number): string => {
+  const date = new Date(timestamp)
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]
+
+  const dayOfWeek = daysOfWeek[date.getUTCDay()]
+  const month = months[date.getUTCMonth()]
+  const day = date.getUTCDate()
+  const year = date.getUTCFullYear()
+
+  return `${dayOfWeek}, ${month} ${day}, ${year}`
+}
+
+const structurePolls = (polls: any[]): PollStruct[] =>
+  polls
+    .map((poll) => ({
+      id: Number(poll.id),
+      image: poll.image,
+      title: poll.title,
+      description: poll.description,
+      votes: Number(poll.votes),
+      contestants: Number(poll.contestants),
+      deleted: poll.deleted,
+      director: poll.director.toLowerCase(),
+      startsAt: Number(poll.startsAt),
+      endsAt: Number(poll.endsAt),
+      timestamp: Number(poll.timestamp),
+    }))
+    .sort((a, b) => b.timestamp - a.timestamp)
+
+export { connectWallet, checkWallet, truncate, formatDate, createPoll, getPolls }
