@@ -1,18 +1,15 @@
+import { createPoll } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
 import { PollParams, RootState } from '@/utils/types'
-import React, { useState } from 'react'
+import React, { ChangeEvent, FormEvent, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
 const CreatePoll: React.FC = () => {
   const dispatch = useDispatch()
   const { setCreateModal } = globalActions
   const { createModal } = useSelector((states: RootState) => states.globalStates)
-
-  const closeModal = () => {
-    dispatch(setCreateModal('scale-0'))
-    console.log('Hello')
-  }
 
   const [poll, setPoll] = useState<PollParams>({
     image: '',
@@ -21,6 +18,51 @@ const CreatePoll: React.FC = () => {
     startsAt: '',
     endsAt: '',
   })
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+
+    if (!poll.image || !poll.title || !poll.description || !poll.startsAt || !poll.endsAt) return
+
+    poll.startsAt = new Date(poll.startsAt).getTime()
+    poll.endsAt = new Date(poll.endsAt).getTime()
+
+    await toast.promise(
+      new Promise<void>((resolve, reject) => {
+        createPoll(poll)
+          .then((tx) => {
+            closeModal()
+            console.log(tx)
+            resolve(tx)
+          })
+          .catch((error) => reject(error))
+      }),
+      {
+        pending: 'Approve transaction...',
+        success: 'Poll created successfully 👌',
+        error: 'Encountered error 🤯',
+      }
+    )
+  }
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setPoll((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
+  }
+
+  const closeModal = () => {
+    dispatch(setCreateModal('scale-0'))
+    setPoll({
+      image: '',
+      title: '',
+      description: '',
+      startsAt: '',
+      endsAt: '',
+    })
+  }
 
   return (
     <div
@@ -36,12 +78,17 @@ const CreatePoll: React.FC = () => {
             </button>
           </div>
 
-          <form className="flex flex-col justify-center items-start rounded-xl mt-5 mb-5">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col justify-center items-start rounded-xl mt-5 mb-5"
+          >
             <div className="py-4 w-full border border-[#212D4A] rounded-full flex items-center px-4 mb-3 mt-2">
               <input
-                placeholder="Poll Name"
+                placeholder="Poll Title"
                 className="bg-transparent outline-none w-full placeholder-[#929292] text-sm"
-                name="name"
+                name="title"
+                value={poll.title}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -58,9 +105,11 @@ const CreatePoll: React.FC = () => {
               </span>
               <input
                 className="bg-transparent outline-none w-full placeholder-transparent text-sm"
-                name="starts"
+                name="startsAt"
                 type="datetime-local"
-                placeholder="Start Date and Time"
+                placeholder="Start Date"
+                value={poll.startsAt}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -77,8 +126,10 @@ const CreatePoll: React.FC = () => {
               </span>
               <input
                 className="bg-transparent outline-none w-full placeholder-[#929292] text-sm"
-                name="ends"
+                name="endsAt"
                 type="datetime-local"
+                value={poll.endsAt}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -88,9 +139,11 @@ const CreatePoll: React.FC = () => {
                 placeholder="Banner URL"
                 type="url"
                 className="bg-transparent outline-none w-full placeholder-[#929292] text-sm"
-                name="banner"
-                required
+                name="image"
                 accept="image/*"
+                value={poll.image}
+                onChange={handleChange}
+                required
               />
             </div>
 
@@ -98,14 +151,16 @@ const CreatePoll: React.FC = () => {
               <textarea
                 placeholder="Poll Description"
                 className="bg-transparent outline-none w-full placeholder-[#929292] text-sm"
-                name="banner"
+                name="description"
+                value={poll.description}
+                onChange={handleChange}
                 required
               />
             </div>
 
             <button
               className="h-[48px] w-full block mt-2 px-3 rounded-full text-sm font-bold
-                transition-all duration-300 bg-[#1B5CFE] hover:bg-blue-500"
+              transition-all duration-300 bg-[#1B5CFE] hover:bg-blue-500"
             >
               Create Poll
             </button>

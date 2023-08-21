@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 import { globalActions } from '@/store/globalSlices'
 import address from '@/artifacts/contractAddress.json'
 import abi from '@/artifacts/contracts/DappVotes.sol/DappVotes.json'
-import { TruncateParams } from '@/utils/types'
+import { PollParams, TruncateParams } from '@/utils/types'
 
 const { setWallet } = globalActions
 const ContractAddress = address.address
@@ -65,6 +65,28 @@ const checkWallet = async () => {
   }
 }
 
+const createPoll = async (data: PollParams) => {
+  if (!ethereum) {
+    reportError('Please install Metamask')
+    return Promise.reject(new Error('Metamask not installed'))
+  }
+
+  try {
+    const contract = await getEthereumContract()
+    const { image, title, description, startsAt, endsAt } = data
+    const tx = await contract.createPoll(image, title, description, startsAt, endsAt)
+
+    await tx.wait()
+    //   const questions = await getQuestions()
+
+    //   store.dispatch(setQuestions(questions))
+    return Promise.resolve(tx)
+  } catch (error) {
+    reportError(error)
+    return Promise.reject(error)
+  }
+}
+
 const truncate = ({ text, startChars, endChars, maxLength }: TruncateParams): string => {
   if (text.length > maxLength) {
     let start = text.substring(0, startChars)
@@ -77,4 +99,4 @@ const truncate = ({ text, startChars, endChars, maxLength }: TruncateParams): st
   return text
 }
 
-export { connectWallet, checkWallet, truncate }
+export { connectWallet, checkWallet, truncate, createPoll }
