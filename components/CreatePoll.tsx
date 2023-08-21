@@ -1,10 +1,10 @@
 import { globalActions } from '@/store/globalSlices'
-import { RootState } from '@/utils/types'
-import React from 'react'
+import { PollParams, RootState } from '@/utils/types'
+import React, { useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 
-const CreatePoll = () => {
+const CreatePoll: React.FC = () => {
   const dispatch = useDispatch()
   const { setCreateModal } = globalActions
   const { createModal } = useSelector((states: RootState) => states.globalStates)
@@ -13,6 +13,14 @@ const CreatePoll = () => {
     dispatch(setCreateModal('scale-0'))
     console.log('Hello')
   }
+
+  const [poll, setPoll] = useState<PollParams>({
+    image: '',
+    title: '',
+    description: '',
+    startsAt: '',
+    endsAt: '',
+  })
 
   return (
     <div
@@ -82,6 +90,7 @@ const CreatePoll = () => {
                 className="bg-transparent outline-none w-full placeholder-[#929292] text-sm"
                 name="banner"
                 required
+                accept="image/*"
               />
             </div>
 

@@ -1,0 +1,80 @@
+import { store } from '@/store'
+import { ethers } from 'ethers'
+import { globalActions } from '@/store/globalSlices'
+import address from '@/artifacts/contractAddress.json'
+import abi from '@/artifacts/contracts/DappVotes.sol/DappVotes.json'
+import { TruncateParams } from '@/utils/types'
+
+const { setWallet } = globalActions
+const ContractAddress = address.address
+const ContractAbi = abi.abi
+let ethereum: any
+let tx: any
+
+if (typeof window !== 'undefined') {
+  ethereum = (window as any).ethereum
+}
+
+const toWei = (num: number) => ethers.utils.parseEther(num.toString())
+const fromWei = (num: number) => ethers.utils.formatEther(num)
+
+const getEthereumContract = async () => {
+  const accounts = await ethereum?.request?.({ method: 'eth_accounts' })
+  const provider = accounts?.[0]
+    ? new ethers.providers.Web3Provider(ethereum)
+    : new ethers.providers.JsonRpcProvider(process.env.NEXT_APP_RPC_URL)
+  const wallet = accounts?.[0] ? null : ethers.Wallet.createRandom()
+  const signer = provider.getSigner(accounts?.[0] ? undefined : wallet?.address)
+
+  const contract = new ethers.Contract(ContractAddress, ContractAbi, signer)
+  return contract
+}
+
+const connectWallet = async () => {
+  try {
+    if (!ethereum) return reportError('Please install Metamask')
+    const accounts = await ethereum.request?.({ method: 'eth_requestAccounts' })
+    store.dispatch(setWallet(accounts?.[0]))
+  } catch (error) {
+    reportError(error)
+  }
+}
+
+const checkWallet = async () => {
+  try {
+    if (!ethereum) return reportError('Please install Metamask')
+    const accounts = await ethereum.request?.({ method: 'eth_accounts' })
+
+    ethereum.on('chainChanged', () => {
+      window.location.reload()
+    })
+
+    ethereum.on('accountsChanged', async () => {
+      store.dispatch(setWallet(accounts?.[0]))
+      await checkWallet()
+    })
+
+    if (accounts?.length) {
+      store.dispatch(setWallet(accounts[0]))
+    } else {
+      store.dispatch(setWallet(''))
+      reportError('Please connect wallet, no accounts found.')
+    }
+  } catch (error) {
+    reportError(error)
+  }
+}
+
+const truncate = ({ text, startChars, endChars, maxLength }: TruncateParams): string => {
+  if (text.length > maxLength) {
+    let start = text.substring(0, startChars)
+    let end = text.substring(text.length - endChars, text.length)
+    while (start.length + end.length < maxLength) {
+      start = start + '.'
+    }
+    return start + end
+  }
+  return text
+}
+
+export { connectWallet, checkWallet, truncate }
