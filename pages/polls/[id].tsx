@@ -10,6 +10,7 @@ import { PollStruct, RootState } from '@/utils/types'
 import { useDispatch, useSelector } from 'react-redux'
 import { globalActions } from '@/store/globalSlices'
 import { useEffect } from 'react'
+import UpdatePoll from '@/components/UpdatePoll'
 
 export default function Polls({ pollData }: { pollData: PollStruct }) {
   const dispatch = useDispatch()
@@ -21,7 +22,7 @@ export default function Polls({ pollData }: { pollData: PollStruct }) {
   }, [dispatch, setPoll, pollData])
 
   return (
-    <div>
+    <>
       {poll && (
         <Head>
           <title>Poll | {poll.title}</title>
@@ -44,8 +45,9 @@ export default function Polls({ pollData }: { pollData: PollStruct }) {
         </section>
 
         <ContestPoll />
+        {poll && <UpdatePoll pollData={poll} />}
       </div>
-    </div>
+    </>
   )
 }
 

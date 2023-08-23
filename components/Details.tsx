@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux'
 
 const Details: React.FC<{ poll: PollStruct }> = ({ poll }) => {
   const dispatch = useDispatch()
-  const { setContestModal } = globalActions
+  const { setContestModal, setUpdateModal } = globalActions
 
   return (
     <>
@@ -71,6 +71,7 @@ const Details: React.FC<{ poll: PollStruct }> = ({ poll }) => {
               className="py-[6px] px-[12px] 
               border border-gray-400 bg-white bg-opacity-20 rounded-full 
               text-[12px] md:text-[16px] gap-[8px] flex justify-center items-center"
+              onClick={() => dispatch(setUpdateModal('scale-100'))}
             >
               <MdModeEdit size={20} className="text-[#1B5CFE]" />
               Edit poll

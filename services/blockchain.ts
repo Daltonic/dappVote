@@ -5,7 +5,7 @@ import address from '@/artifacts/contractAddress.json'
 import abi from '@/artifacts/contracts/DappVotes.sol/DappVotes.json'
 import { PollParams, PollStruct, TruncateParams } from '@/utils/types'
 
-const { setWallet, setPolls } = globalActions
+const { setWallet, setPolls, setPoll } = globalActions
 const ContractAddress = address.address
 const ContractAbi = abi.abi
 let ethereum: any
@@ -83,6 +83,27 @@ const createPoll = async (data: PollParams) => {
   }
 }
 
+const updatePoll = async (id: number, data: PollParams) => {
+  if (!ethereum) {
+    reportError('Please install Metamask')
+    return Promise.reject(new Error('Metamask not installed'))
+  }
+
+  try {
+    const contract = await getEthereumContract()
+    const { image, title, description, startsAt, endsAt } = data
+    const tx = await contract.updatePoll(id, image, title, description, startsAt, endsAt)
+
+    await tx.wait()
+    const poll = await getPoll(id)
+    store.dispatch(setPoll(poll))
+    return Promise.resolve(tx)
+  } catch (error) {
+    reportError(error)
+    return Promise.reject(error)
+  }
+}
+
 const getPolls = async (): Promise<PollStruct[]> => {
   const contract = await getEthereumContract()
   const polls = await contract.getPolls()
@@ -133,6 +154,18 @@ const formatDate = (timestamp: number): string => {
   return `${dayOfWeek}, ${month} ${day}, ${year}`
 }
 
+const formatTimestamp = (timestamp: number) => {
+  const date = new Date(timestamp)
+
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`
+}
+
 const structurePolls = (polls: any[]): PollStruct[] =>
   polls
     .map((poll) => ({
@@ -150,4 +183,14 @@ const structurePolls = (polls: any[]): PollStruct[] =>
     }))
     .sort((a, b) => b.timestamp - a.timestamp)
 
-export { connectWallet, checkWallet, truncate, formatDate, createPoll, getPolls, getPoll }
+export {
+  connectWallet,
+  checkWallet,
+  truncate,
+  formatDate,
+  formatTimestamp,
+  createPoll,
+  updatePoll,
+  getPolls,
+  getPoll,
+}
