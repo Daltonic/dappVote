@@ -89,6 +89,12 @@ const getPolls = async (): Promise<PollStruct[]> => {
   return structurePolls(polls)
 }
 
+const getPoll = async (id: number): Promise<PollStruct> => {
+  const contract = await getEthereumContract()
+  const polls = await contract.getPoll(id)
+  return structurePolls([polls])[0]
+}
+
 const truncate = ({ text, startChars, endChars, maxLength }: TruncateParams): string => {
   if (text.length > maxLength) {
     let start = text.substring(0, startChars)
@@ -144,4 +150,4 @@ const structurePolls = (polls: any[]): PollStruct[] =>
     }))
     .sort((a, b) => b.timestamp - a.timestamp)
 
-export { connectWallet, checkWallet, truncate, formatDate, createPoll, getPolls }
+export { connectWallet, checkWallet, truncate, formatDate, createPoll, getPolls, getPoll }
