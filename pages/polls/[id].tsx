@@ -5,21 +5,28 @@ import Contestants from '@/components/Contestants'
 import Head from 'next/head'
 import ContestPoll from '@/components/ContestPoll'
 import { GetServerSidePropsContext } from 'next'
-import { getPoll } from '@/services/blockchain'
-import { PollStruct, RootState } from '@/utils/types'
+import { getContestants, getPoll } from '@/services/blockchain'
+import { ContestantStruct, PollStruct, RootState } from '@/utils/types'
 import { useDispatch, useSelector } from 'react-redux'
 import { globalActions } from '@/store/globalSlices'
 import { useEffect } from 'react'
 import UpdatePoll from '@/components/UpdatePoll'
 
-export default function Polls({ pollData }: { pollData: PollStruct }) {
+export default function Polls({
+  pollData,
+  contestantData,
+}: {
+  pollData: PollStruct
+  contestantData: ContestantStruct[]
+}) {
   const dispatch = useDispatch()
-  const { setPoll } = globalActions
-  const { poll } = useSelector((states: RootState) => states.globalStates)
+  const { setPoll, setContestants } = globalActions
+  const { poll, contestants } = useSelector((states: RootState) => states.globalStates)
 
   useEffect(() => {
     dispatch(setPoll(pollData))
-  }, [dispatch, setPoll, pollData])
+    dispatch(setContestants(contestantData))
+  }, [dispatch, setPoll, setContestants, contestantData, pollData])
 
   return (
     <>
@@ -40,11 +47,11 @@ export default function Polls({ pollData }: { pollData: PollStruct }) {
         <section className="relative px-5 py-10 space-y-16 text-white sm:p-10">
           <Navbar />
           {poll && <Details poll={poll} />}
-          <Contestants />
+          {contestants && <Contestants contestants={contestants} />}
           <Footer />
         </section>
 
-        <ContestPoll />
+        {poll && <ContestPoll poll={poll} />}
         {poll && <UpdatePoll pollData={poll} />}
       </div>
     </>
@@ -54,10 +61,12 @@ export default function Polls({ pollData }: { pollData: PollStruct }) {
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const { id } = context.query
   const pollData = await getPoll(Number(id))
+  const contestantData = await getContestants(Number(id))
 
   return {
     props: {
       pollData: JSON.parse(JSON.stringify(pollData)),
+      contestantData: JSON.parse(JSON.stringify(contestantData)),
     },
   }
 }

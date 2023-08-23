@@ -27,6 +27,15 @@ export interface PollStruct {
   timestamp: number
 }
 
+export interface ContestantStruct {
+  id: number
+  image: string
+  name: string
+  voter: string
+  votes: number
+  voters: string[]
+}
+
 export interface GlobalState {
   wallet: string | null
   createModal: string | null
@@ -34,6 +43,7 @@ export interface GlobalState {
   contestModal: string | null
   polls: PollStruct[]
   poll: PollStruct | null
+  contestants: ContestantStruct[]
 }
 
 export interface RootState {

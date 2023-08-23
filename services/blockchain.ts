@@ -3,9 +3,9 @@ import { ethers } from 'ethers'
 import { globalActions } from '@/store/globalSlices'
 import address from '@/artifacts/contractAddress.json'
 import abi from '@/artifacts/contracts/DappVotes.sol/DappVotes.json'
-import { PollParams, PollStruct, TruncateParams } from '@/utils/types'
+import { ContestantStruct, PollParams, PollStruct, TruncateParams } from '@/utils/types'
 
-const { setWallet, setPolls, setPoll } = globalActions
+const { setWallet, setPolls, setPoll, setContestants } = globalActions
 const ContractAddress = address.address
 const ContractAbi = abi.abi
 let ethereum: any
@@ -104,6 +104,29 @@ const updatePoll = async (id: number, data: PollParams) => {
   }
 }
 
+const contestPoll = async (id: number, name: string, image: string) => {
+  if (!ethereum) {
+    reportError('Please install Metamask')
+    return Promise.reject(new Error('Metamask not installed'))
+  }
+
+  try {
+    const contract = await getEthereumContract()
+    const tx = await contract.contest(id, name, image)
+
+    await tx.wait()
+    const poll = await getPoll(id)
+    store.dispatch(setPoll(poll))
+    
+    const contestants = await getContestants(id)
+    store.dispatch(setContestants(contestants))
+    return Promise.resolve(tx)
+  } catch (error) {
+    reportError(error)
+    return Promise.reject(error)
+  }
+}
+
 const getPolls = async (): Promise<PollStruct[]> => {
   const contract = await getEthereumContract()
   const polls = await contract.getPolls()
@@ -114,6 +137,12 @@ const getPoll = async (id: number): Promise<PollStruct> => {
   const contract = await getEthereumContract()
   const polls = await contract.getPoll(id)
   return structurePolls([polls])[0]
+}
+
+const getContestants = async (id: number): Promise<ContestantStruct[]> => {
+  const contract = await getEthereumContract()
+  const contestants = await contract.getContestants(id)
+  return structureContestants(contestants)
 }
 
 const truncate = ({ text, startChars, endChars, maxLength }: TruncateParams): string => {
@@ -183,6 +212,18 @@ const structurePolls = (polls: any[]): PollStruct[] =>
     }))
     .sort((a, b) => b.timestamp - a.timestamp)
 
+const structureContestants = (contestants: any[]): ContestantStruct[] =>
+  contestants
+    .map((contestant) => ({
+      id: Number(contestant.id),
+      image: contestant.image,
+      name: contestant.name,
+      voter: contestant.voter.toLowerCase(),
+      votes: Number(contestant.votes),
+      voters: contestant.voters.map((voter: string) => voter.toLowerCase()),
+    }))
+    .sort((a, b) => b.votes - a.votes)
+
 export {
   connectWallet,
   checkWallet,
@@ -193,4 +234,6 @@ export {
   updatePoll,
   getPolls,
   getPoll,
+  contestPoll,
+  getContestants,
 }

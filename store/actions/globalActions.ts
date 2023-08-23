@@ -1,4 +1,4 @@
-import { GlobalState, PollStruct } from '@/utils/types'
+import { ContestantStruct, GlobalState, PollStruct } from '@/utils/types'
 import { PayloadAction } from '@reduxjs/toolkit'
 
 export const globalActions = {
@@ -19,5 +19,8 @@ export const globalActions = {
   },
   setPoll: (state: GlobalState, action: PayloadAction<PollStruct>) => {
     state.poll = action.payload
+  },
+  setContestants: (state: GlobalState, action: PayloadAction<ContestantStruct[]>) => {
+    state.contestants = action.payload
   },
 }

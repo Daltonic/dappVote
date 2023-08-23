@@ -7,4 +7,5 @@ export const globalStates: GlobalState = {
   contestModal: 'scale-0',
   polls: [],
   poll: null,
+  contestants: [],
 }
