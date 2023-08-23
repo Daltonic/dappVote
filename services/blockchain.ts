@@ -104,6 +104,24 @@ const updatePoll = async (id: number, data: PollParams) => {
   }
 }
 
+const deletePoll = async (id: number) => {
+  if (!ethereum) {
+    reportError('Please install Metamask')
+    return Promise.reject(new Error('Metamask not installed'))
+  }
+
+  try {
+    const contract = await getEthereumContract()
+    const tx = await contract.deletePoll(id)
+
+    await tx.wait()
+    return Promise.resolve(tx)
+  } catch (error) {
+    reportError(error)
+    return Promise.reject(error)
+  }
+}
+
 const contestPoll = async (id: number, name: string, image: string) => {
   if (!ethereum) {
     reportError('Please install Metamask')
@@ -117,7 +135,30 @@ const contestPoll = async (id: number, name: string, image: string) => {
     await tx.wait()
     const poll = await getPoll(id)
     store.dispatch(setPoll(poll))
-    
+
+    const contestants = await getContestants(id)
+    store.dispatch(setContestants(contestants))
+    return Promise.resolve(tx)
+  } catch (error) {
+    reportError(error)
+    return Promise.reject(error)
+  }
+}
+
+const voteCandidate = async (id: number, cid: number) => {
+  if (!ethereum) {
+    reportError('Please install Metamask')
+    return Promise.reject(new Error('Metamask not installed'))
+  }
+
+  try {
+    const contract = await getEthereumContract()
+    const tx = await contract.vote(id, cid)
+
+    await tx.wait()
+    const poll = await getPoll(id)
+    store.dispatch(setPoll(poll))
+
     const contestants = await getContestants(id)
     store.dispatch(setContestants(contestants))
     return Promise.resolve(tx)
@@ -232,8 +273,10 @@ export {
   formatTimestamp,
   createPoll,
   updatePoll,
+  deletePoll,
   getPolls,
   getPoll,
   contestPoll,
   getContestants,
+  voteCandidate,
 }

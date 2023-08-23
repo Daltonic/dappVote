@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { globalActions } from '@/store/globalSlices'
 import { useEffect } from 'react'
 import UpdatePoll from '@/components/UpdatePoll'
+import DeletePoll from '@/components/DeletePoll'
 
 export default function Polls({
   pollData,
@@ -47,11 +48,12 @@ export default function Polls({
         <section className="relative px-5 py-10 space-y-16 text-white sm:p-10">
           <Navbar />
           {poll && <Details poll={poll} />}
-          {contestants && <Contestants contestants={contestants} />}
+          {poll && contestants && <Contestants poll={poll} contestants={contestants} />}
           <Footer />
         </section>
 
         {poll && <ContestPoll poll={poll} />}
+        {poll && <DeletePoll poll={poll} />}
         {poll && <UpdatePoll pollData={poll} />}
       </div>
     </>

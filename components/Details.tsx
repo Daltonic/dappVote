@@ -1,14 +1,15 @@
 import { formatDate, truncate } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
-import { PollStruct } from '@/utils/types'
+import { PollStruct, RootState } from '@/utils/types'
 import Image from 'next/image'
 import React from 'react'
-import { MdModeEdit } from 'react-icons/md'
-import { useDispatch } from 'react-redux'
+import { MdModeEdit, MdDelete } from 'react-icons/md'
+import { useDispatch, useSelector } from 'react-redux'
 
 const Details: React.FC<{ poll: PollStruct }> = ({ poll }) => {
   const dispatch = useDispatch()
-  const { setContestModal, setUpdateModal } = globalActions
+  const { setContestModal, setUpdateModal, setDeleteModal } = globalActions
+  const { wallet } = useSelector((states: RootState) => states.globalStates)
 
   return (
     <>
@@ -27,7 +28,7 @@ const Details: React.FC<{ poll: PollStruct }> = ({ poll }) => {
 
       <div
         className="flex flex-col items-center justify-center space-y-6
-            mt-5 w-full md:max-w-[736px] mx-auto"
+        mt-5 w-full md:max-w-[736px] mx-auto"
       >
         <h1 className="text-[47px] font-[600px] text-center leading-none">{poll.title}</h1>
         <p className="text-[16px] font-[500px] text-center">{poll.description}</p>
@@ -35,7 +36,7 @@ const Details: React.FC<{ poll: PollStruct }> = ({ poll }) => {
         <div className=" h-[136px] gap-[16px] flex flex-col items-center mt-4">
           <div
             className="h-[36px] py-[6px] px-[12px] rounded-full gap-[4px] border 
-                border-gray-400 bg-white bg-opacity-20"
+            border-gray-400 bg-white bg-opacity-20"
           >
             <p className="text-[14px] font-[500px] text-center md:text-[16px]">
               {formatDate(poll.startsAt)} - {formatDate(poll.endsAt)}
@@ -57,25 +58,39 @@ const Details: React.FC<{ poll: PollStruct }> = ({ poll }) => {
               className="py-[6px] px-[12px] border border-gray-400 bg-white bg-opacity-20
               rounded-full text-[12px] md:text-[16px]"
             >
-              {poll.votes} Vote
+              {poll.votes} votes
             </button>
 
             <button
               className="py-[6px] px-[12px] 
-                    border border-gray-400 bg-white bg-opacity-20 rounded-full text-[12px] md:text-[16px]"
+              border border-gray-400 bg-white bg-opacity-20 rounded-full text-[12px] md:text-[16px]"
             >
               {poll.contestants} contestants
             </button>
 
-            <button
-              className="py-[6px] px-[12px] 
+            {wallet && wallet === poll.director && poll.votes < 1 && (
+              <button
+                className="py-[6px] px-[12px] 
               border border-gray-400 bg-white bg-opacity-20 rounded-full 
               text-[12px] md:text-[16px] gap-[8px] flex justify-center items-center"
-              onClick={() => dispatch(setUpdateModal('scale-100'))}
-            >
-              <MdModeEdit size={20} className="text-[#1B5CFE]" />
-              Edit poll
-            </button>
+                onClick={() => dispatch(setUpdateModal('scale-100'))}
+              >
+                <MdModeEdit size={20} className="text-[#1B5CFE]" />
+                Edit poll
+              </button>
+            )}
+
+            {wallet && wallet === poll.director && poll.votes < 1 && (
+              <button
+                className="py-[6px] px-[12px] 
+              border border-gray-400 bg-white bg-opacity-20 rounded-full 
+              text-[12px] md:text-[16px] gap-[8px] flex justify-center items-center"
+                onClick={() => dispatch(setDeleteModal('scale-100'))}
+              >
+                <MdDelete size={20} className="text-[#fe1b1b]" />
+                Delete poll
+              </button>
+            )}
           </div>
 
           <button

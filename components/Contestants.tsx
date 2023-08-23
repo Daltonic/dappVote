@@ -1,28 +1,54 @@
-import { truncate } from '@/services/blockchain'
-import { ContestantStruct } from '@/utils/types'
+import { truncate, voteCandidate } from '@/services/blockchain'
+import { ContestantStruct, PollStruct, RootState } from '@/utils/types'
 import Image from 'next/image'
 import React from 'react'
 import { BiUpvote } from 'react-icons/bi'
+import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
-const Contestants: React.FC<{ contestants: ContestantStruct[] }> = ({ contestants }) => {
+const Contestants: React.FC<{ contestants: ContestantStruct[]; poll: PollStruct }> = ({
+  contestants,
+  poll,
+}) => {
   return (
     <div className="space-y-2">
       <h1 className="text-center text-[48px] font-[600px]">Contestants</h1>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 pb-7 gap-[62px] sm:w-2/3 mx-auto">
         {contestants.map((contestant, i) => (
-          <Contestant contestant={contestant} key={i} />
+          <Contestant poll={poll} contestant={contestant} key={i} />
         ))}
       </div>
     </div>
   )
 }
 
-const Contestant: React.FC<{ contestant: ContestantStruct }> = ({ contestant }) => {
+const Contestant: React.FC<{ contestant: ContestantStruct; poll: PollStruct }> = ({
+  contestant,
+  poll,
+}) => {
+  const { wallet } = useSelector((states: RootState) => states.globalStates)
+
+  const voteContestant = async () => {
+    await toast.promise(
+      new Promise<void>((resolve, reject) => {
+        voteCandidate(poll.id, contestant.id)
+          .then((tx) => {
+            console.log(tx)
+            resolve(tx)
+          })
+          .catch((error) => reject(error))
+      }),
+      {
+        pending: 'Approve transaction...',
+        success: 'Poll contested successfully 👌',
+        error: 'Encountered error 🤯',
+      }
+    )
+  }
   return (
     <div className="flex justify-start items-center space-x-2 md:space-x-8 mt-5 md:mx-auto">
       <div className="w-[187px] sm:w-[324px] h-[229px] sm:h-[180px] rounded-[24px] overflow-hidden">
-        {/* <img className="w-full h-full object-cover" src="../assets/images/Rectangle 4.png" alt="" /> */}
         <Image
           className="w-full h-full object-cover"
           width={3000}
@@ -48,8 +74,16 @@ const Contestant: React.FC<{ contestant: ContestantStruct }> = ({ contestant }) 
           </p>
         </div>
 
-        <button className="w-[158px] sm:w-[213px] h-[48px] rounded-[30.5px] bg-[#1B5CFE]">
-          Vote
+        <button
+          onClick={voteContestant}
+          disabled={wallet ? contestant.voters.includes(wallet) : true}
+          className={`w-[158px] sm:w-[213px] h-[48px] rounded-[30.5px] ${
+            wallet && contestant.voters.includes(wallet)
+              ? 'bg-[#B0BAC9] cursor-not-allowed'
+              : 'bg-[#1B5CFE]'
+          }`}
+        >
+          {wallet && contestant.voters.includes(wallet) ? 'Voted' : 'Vote'}
         </button>
 
         <div className="w-[86px] h-[32px] flex items-center justify-center gap-3">

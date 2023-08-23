@@ -40,6 +40,7 @@ export interface GlobalState {
   wallet: string | null
   createModal: string | null
   updateModal: string | null
+  deleteModal: string | null
   contestModal: string | null
   polls: PollStruct[]
   poll: PollStruct | null

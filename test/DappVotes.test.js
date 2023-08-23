@@ -149,6 +149,8 @@ describe('Contracts', () => {
 
         result = await contract.getPoll(pollId)
         expect(result.votes.toNumber()).to.be.equal(2)
+        expect(result.voters).to.have.lengthOf(2)
+        expect(result.avatars).to.have.lengthOf(2)
 
         result = await contract.getContestants(pollId)
         expect(result).to.have.lengthOf(2)

@@ -1,11 +1,11 @@
 //SPDX-License-Identifier: MIT
 pragma solidity >=0.7.0 <0.9.0;
-import "@openzeppelin/contracts/utils/Counters.sol";
+import '@openzeppelin/contracts/utils/Counters.sol';
 
 contract DappVotes {
-    using Counters for Counters.Counter;
-    Counters.Counter private totalPolls;
-    Counters.Counter private totalContestants;
+  using Counters for Counters.Counter;
+  Counters.Counter private totalPolls;
+  Counters.Counter private totalContestants;
 
   struct PollStruct {
     uint id;
@@ -19,6 +19,8 @@ contract DappVotes {
     uint startsAt;
     uint endsAt;
     uint timestamp;
+    address[] voters;
+    string[] avatars;
   }
 
   struct ContestantStruct {
@@ -80,7 +82,8 @@ contract DappVotes {
     require(bytes(title).length > 0, 'Title cannot be empty');
     require(bytes(description).length > 0, 'Description cannot be empty');
     require(bytes(image).length > 0, 'Image URL cannot be empty');
-    require(!polls[id].deleted, 'Polling already started');
+    require(!polls[id].deleted, 'Polling already deleted');
+    require(polls[id].votes < 1, 'Poll has votes already');
     require(endsAt > startsAt, 'End date must be greater than start date');
 
     polls[id].title = title;
@@ -104,16 +107,16 @@ contract DappVotes {
   function getPolls() public view returns (PollStruct[] memory Polls) {
     uint available;
     for (uint256 i = 1; i <= totalPolls.current(); i++) {
-        if(!polls[i].deleted) available++;
+      if (!polls[i].deleted) available++;
     }
 
     Polls = new PollStruct[](available);
     uint index;
 
     for (uint256 i = 1; i <= totalPolls.current(); i++) {
-        if(!polls[i].deleted) {
-            Polls[index++] = polls[i];
-        }
+      if (!polls[i].deleted) {
+        Polls[index++] = polls[i];
+      }
     }
   }
 
@@ -133,26 +136,27 @@ contract DappVotes {
 
     contestants[id][contestant.id] = contestant;
     contested[id][msg.sender] = true;
+    polls[id].avatars.push(image);
     polls[id].contestants++;
   }
 
   function getContestant(uint pollId, uint cid) public view returns (ContestantStruct memory) {
     return contestants[pollId][cid];
   }
-  
+
   function getContestants(uint pollId) public view returns (ContestantStruct[] memory Contestants) {
     uint available;
     for (uint256 i = 1; i <= totalContestants.current(); i++) {
-        if(contestants[pollId][i].id == i) available++;
+      if (contestants[pollId][i].id == i) available++;
     }
 
     Contestants = new ContestantStruct[](available);
     uint index;
 
     for (uint256 i = 1; i <= totalContestants.current(); i++) {
-        if(contestants[pollId][i].id == i) {
-            Contestants[index++] = contestants[pollId][i];
-        }
+      if (contestants[pollId][i].id == i) {
+        Contestants[index++] = contestants[pollId][i];
+      }
     }
   }
 
@@ -161,11 +165,12 @@ contract DappVotes {
     require(!voted[id][msg.sender], 'Already voted');
     require(!polls[id].deleted, 'Polling not available');
     require(
-        currentTime() >=  polls[id].startsAt && currentTime() < polls[id].endsAt,
-        'Voting must be in session'
+      currentTime() >= polls[id].startsAt && currentTime() < polls[id].endsAt,
+      'Voting must be in session'
     );
 
     polls[id].votes++;
+    polls[id].voters.push(msg.sender);
 
     contestants[id][cid].votes++;
     contestants[id][cid].voters.push(msg.sender);
