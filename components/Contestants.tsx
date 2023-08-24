@@ -1,9 +1,8 @@
 import { truncate } from '@/utils/helper'
-import { ContestantStruct, PollStruct, RootState } from '@/utils/types'
+import { ContestantStruct, PollStruct } from '@/utils/types'
 import Image from 'next/image'
 import React from 'react'
 import { BiUpvote } from 'react-icons/bi'
-import { useSelector } from 'react-redux'
 
 const Contestants: React.FC<{ contestants: ContestantStruct[]; poll: PollStruct }> = ({
   contestants,
@@ -26,7 +25,7 @@ const Contestant: React.FC<{ contestant: ContestantStruct; poll: PollStruct }> =
   contestant,
   poll,
 }) => {
-  const { wallet } = useSelector((states: RootState) => states.globalStates)
+  const wallet = '' // modify later
 
   const voteContestant = async () => {
     console.log(poll, contestant)
