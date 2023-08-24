@@ -9,7 +9,7 @@ const Polls: React.FC<{ polls: PollStruct[] }> = ({ polls }) => {
     <div>
       <h1 className="text-center text-[34px] font-[550px] mb-5">Start Voting</h1>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 pb-7 gap-[62px] sm:w-2/3 mx-auto">
+      <div className="grid grid-cols-1 xl:grid-cols-2 pb-7 gap-[62px] sm:w-2/3 xl:w-5/6 mx-auto">
         {polls.map((poll, i) => (
           <Poll key={i} poll={poll} />
         ))}
