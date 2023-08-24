@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { formatDate, truncate } from '@/services/blockchain'
+import { formatDate, truncate } from '@/utils/helper'
 import { PollStruct } from '@/utils/types'
 import { useRouter } from 'next/router'
 import React from 'react'

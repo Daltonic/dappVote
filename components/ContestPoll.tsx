@@ -1,13 +1,9 @@
-import { globalActions } from '@/store/globalSlices'
-import { PollStruct, RootState } from '@/utils/types'
+import { PollStruct } from '@/utils/types'
 import React, { ChangeEvent, FormEvent, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
-import { useDispatch, useSelector } from 'react-redux'
 
 const ContestPoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
-  const dispatch = useDispatch()
-  const { setContestModal } = globalActions
-  const { contestModal } = useSelector((states: RootState) => states.globalStates)
+  const contestModal = 'scale-0'
 
   const [contestant, setContestant] = useState({
     name: '',
@@ -32,7 +28,6 @@ const ContestPoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
   }
 
   const closeModal = () => {
-    dispatch(setContestModal('scale-0'))
     setContestant({
       name: '',
       image: '',

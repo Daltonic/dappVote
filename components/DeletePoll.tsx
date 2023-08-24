@@ -1,23 +1,17 @@
-import { globalActions } from '@/store/globalSlices'
-import { PollStruct, RootState } from '@/utils/types'
+import { PollStruct } from '@/utils/types'
 import { BsTrash3Fill } from 'react-icons/bs'
 import React from 'react'
 import { FaTimes } from 'react-icons/fa'
-import { useDispatch, useSelector } from 'react-redux'
 
 const DeletePoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
-  const dispatch = useDispatch()
-  const { setDeleteModal } = globalActions
-  const { deleteModal } = useSelector((states: RootState) => states.globalStates)
+  const deleteModal = 'scale-0'
 
   const handleDelete = async () => {
     console.log(poll)
     closeModal()
   }
 
-  const closeModal = () => {
-    dispatch(setDeleteModal('scale-0'))
-  }
+  const closeModal = () => {}
 
   return (
     <div

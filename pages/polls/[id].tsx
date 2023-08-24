@@ -5,30 +5,18 @@ import Contestants from '@/components/Contestants'
 import Head from 'next/head'
 import ContestPoll from '@/components/ContestPoll'
 import { GetServerSidePropsContext } from 'next'
-import { ContestantStruct, PollStruct, RootState } from '@/utils/types'
-import { useDispatch, useSelector } from 'react-redux'
-import { globalActions } from '@/store/globalSlices'
-import { useEffect } from 'react'
+import { ContestantStruct, PollStruct } from '@/utils/types'
 import UpdatePoll from '@/components/UpdatePoll'
 import DeletePoll from '@/components/DeletePoll'
 import { generateFakeContestants, generateFakePolls } from '@/services/data'
 
 export default function Polls({
-  pollData,
-  contestantData,
+  poll,
+  contestants,
 }: {
-  pollData: PollStruct
-  contestantData: ContestantStruct[]
+  poll: PollStruct
+  contestants: ContestantStruct[]
 }) {
-  const dispatch = useDispatch()
-  const { setPoll, setContestants } = globalActions
-  const { poll, contestants } = useSelector((states: RootState) => states.globalStates)
-
-  useEffect(() => {
-    dispatch(setPoll(pollData))
-    dispatch(setContestants(contestantData))
-  }, [dispatch, setPoll, setContestants, contestantData, pollData])
-
   return (
     <>
       {poll && (
@@ -67,8 +55,8 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
   return {
     props: {
-      pollData: JSON.parse(JSON.stringify(pollData)),
-      contestantData: JSON.parse(JSON.stringify(contestantData)),
+      poll: JSON.parse(JSON.stringify(pollData)),
+      contestants: JSON.parse(JSON.stringify(contestantData)),
     },
   }
 }

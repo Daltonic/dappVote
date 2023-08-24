@@ -1,15 +1,11 @@
 import { formatDate, truncate } from '@/utils/helper'
-import { globalActions } from '@/store/globalSlices'
-import { PollStruct, RootState } from '@/utils/types'
+import { PollStruct } from '@/utils/types'
 import Image from 'next/image'
 import React from 'react'
 import { MdModeEdit, MdDelete } from 'react-icons/md'
-import { useDispatch, useSelector } from 'react-redux'
 
 const Details: React.FC<{ poll: PollStruct }> = ({ poll }) => {
-  const dispatch = useDispatch()
-  const { setContestModal, setUpdateModal, setDeleteModal } = globalActions
-  const { wallet } = useSelector((states: RootState) => states.globalStates)
+  const wallet = '' // modify later
 
   return (
     <>
@@ -73,7 +69,6 @@ const Details: React.FC<{ poll: PollStruct }> = ({ poll }) => {
                 className="py-[6px] px-[12px] 
               border border-gray-400 bg-white bg-opacity-20 rounded-full 
               text-[12px] md:text-[16px] gap-[8px] flex justify-center items-center"
-                onClick={() => dispatch(setUpdateModal('scale-100'))}
               >
                 <MdModeEdit size={20} className="text-[#1B5CFE]" />
                 Edit poll
@@ -85,7 +80,6 @@ const Details: React.FC<{ poll: PollStruct }> = ({ poll }) => {
                 className="py-[6px] px-[12px] 
               border border-gray-400 bg-white bg-opacity-20 rounded-full 
               text-[12px] md:text-[16px] gap-[8px] flex justify-center items-center"
-                onClick={() => dispatch(setDeleteModal('scale-100'))}
               >
                 <MdDelete size={20} className="text-[#fe1b1b]" />
                 Delete poll
@@ -97,7 +91,6 @@ const Details: React.FC<{ poll: PollStruct }> = ({ poll }) => {
             <button
               className="text-black h-[45px] w-[148px] rounded-full transition-all duration-300
               border border-gray-400 bg-white hover:bg-opacity-20 hover:text-white py-2"
-              onClick={() => dispatch(setContestModal('scale-100'))}
             >
               Contest
             </button>

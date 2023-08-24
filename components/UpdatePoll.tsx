@@ -1,14 +1,10 @@
 import { formatTimestamp } from '@/utils/helper'
-import { globalActions } from '@/store/globalSlices'
-import { PollParams, PollStruct, RootState } from '@/utils/types'
+import { PollParams, PollStruct } from '@/utils/types'
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
-import { useDispatch, useSelector } from 'react-redux'
 
 const UpdatePoll: React.FC<{ pollData: PollStruct }> = ({ pollData }) => {
-  const dispatch = useDispatch()
-  const { setUpdateModal } = globalActions
-  const { updateModal } = useSelector((states: RootState) => states.globalStates)
+  const updateModal = 'scale-0'
 
   const [poll, setPoll] = useState<PollParams>({
     image: '',
@@ -51,9 +47,7 @@ const UpdatePoll: React.FC<{ pollData: PollStruct }> = ({ pollData }) => {
     }))
   }
 
-  const closeModal = () => {
-    dispatch(setUpdateModal('scale-0'))
-  }
+  const closeModal = () => {}
 
   return (
     <div
