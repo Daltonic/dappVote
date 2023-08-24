@@ -1,6 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import { formatDate, truncate } from '@/services/blockchain'
 import { PollStruct } from '@/utils/types'
-import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React from 'react'
 
@@ -26,22 +26,17 @@ const Poll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
             grid grid-cols-1 md:flex justify-start w-full"
       >
         <div className="w-full flex justify-between space-y-0 sm:space-y-2 sm:flex-col md:w-[217px]">
-          <Image
-            src="/assets/images/Rectangle 4.png"
-            alt=""
-            width={160}
-            height={165}
-            layout="responsive"
-            className="rounded-20px object-cover"
-          />
-          <Image
-            src="/assets/images/Rectangle 4.png"
-            alt=""
-            width={160}
-            height={165}
-            layout="responsive"
-            className="rounded-20px object-cover"
-          />
+          {[...poll.avatars, '/assets/images/question.jpeg', '/assets/images/question.jpeg']
+            .slice(0, 2)
+            .map((avatar, i) => (
+              <img
+                key={i}
+                src={avatar}
+                alt={poll.title}
+                className="w-[160px] md:w-full
+                h-[135px] rounded-[20px] object-cover"
+              />
+            ))}
         </div>
 
         <div

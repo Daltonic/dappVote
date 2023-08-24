@@ -25,6 +25,8 @@ export interface PollStruct {
   startsAt: number
   endsAt: number
   timestamp: number
+  avatars: string[]
+  voters: string[]
 }
 
 export interface ContestantStruct {

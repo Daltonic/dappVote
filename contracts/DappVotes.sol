@@ -124,6 +124,7 @@ contract DappVotes {
     require(pollExist[id], 'Poll not found');
     require(bytes(name).length > 0, 'name cannot be empty');
     require(bytes(image).length > 0, 'image cannot be empty');
+    require(polls[id].votes < 1, 'Poll has votes already');
     require(!contested[id][msg.sender], 'Already contested');
 
     totalContestants.increment();

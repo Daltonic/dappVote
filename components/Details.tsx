@@ -93,13 +93,15 @@ const Details: React.FC<{ poll: PollStruct }> = ({ poll }) => {
             )}
           </div>
 
-          <button
-            className="text-black h-[45px] w-[148px] rounded-full transition-all duration-300
-            border border-gray-400 bg-white hover:bg-opacity-20 hover:text-white py-2"
-            onClick={() => dispatch(setContestModal('scale-100'))}
-          >
-            Contest
-          </button>
+          {poll.votes < 1 && (
+            <button
+              className="text-black h-[45px] w-[148px] rounded-full transition-all duration-300
+              border border-gray-400 bg-white hover:bg-opacity-20 hover:text-white py-2"
+              onClick={() => dispatch(setContestModal('scale-100'))}
+            >
+              Contest
+            </button>
+          )}
         </div>
       </div>
     </>

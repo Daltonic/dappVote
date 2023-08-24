@@ -250,6 +250,8 @@ const structurePolls = (polls: any[]): PollStruct[] =>
       startsAt: Number(poll.startsAt),
       endsAt: Number(poll.endsAt),
       timestamp: Number(poll.timestamp),
+      voters: poll.voters.map((voter: string) => voter.toLowerCase()),
+      avatars: poll.avatars,
     }))
     .sort((a, b) => b.timestamp - a.timestamp)
 

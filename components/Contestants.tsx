@@ -78,7 +78,7 @@ const Contestant: React.FC<{ contestant: ContestantStruct; poll: PollStruct }> =
           onClick={voteContestant}
           disabled={wallet ? contestant.voters.includes(wallet) : true}
           className={`w-[158px] sm:w-[213px] h-[48px] rounded-[30.5px] ${
-            wallet && contestant.voters.includes(wallet)
+            wallet && poll.voters.includes(wallet)
               ? 'bg-[#B0BAC9] cursor-not-allowed'
               : 'bg-[#1B5CFE]'
           }`}
