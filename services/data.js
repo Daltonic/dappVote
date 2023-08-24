@@ -12,8 +12,8 @@ export const generateFakePolls = (count) => {
       image: faker.image.avatar(),
       title: faker.lorem.lines(1),
       description: faker.lorem.paragraph(),
-      votes: faker.number.int(),
-      contestants: faker.number.int(),
+      votes: numVoters,
+      contestants: faker.number.int({ min: 1, max: 3 }),
       deleted: faker.datatype.boolean(),
       director: faker.finance.ethereumAddress(),
       startsAt: Date.now() - 10 * 60 * 1000,
@@ -27,4 +27,25 @@ export const generateFakePolls = (count) => {
   }
 
   return fakePolls
+}
+
+export const generateFakeContestants = (count) => {
+  const fakeContestants = []
+
+  for (let i = 0; i < count; i++) {
+    const numVoters = faker.number.int({ min: 1, max: 3 })
+
+    const fakeContestant = {
+      id: i + 1,
+      image: faker.image.avatar(),
+      name: faker.person.fullName(),
+      voter: faker.finance.ethereumAddress(),
+      votes: numVoters,
+      voters: Array.from({ length: numVoters }, () => faker.finance.ethereumAddress()),
+    }
+
+    fakeContestants.push(fakeContestant)
+  }
+
+  return fakeContestants
 }

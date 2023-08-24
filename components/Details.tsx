@@ -1,4 +1,4 @@
-import { formatDate, truncate } from '@/services/blockchain'
+import { formatDate, truncate } from '@/utils/helper'
 import { globalActions } from '@/store/globalSlices'
 import { PollStruct, RootState } from '@/utils/types'
 import Image from 'next/image'

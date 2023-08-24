@@ -1,10 +1,9 @@
-import { truncate, voteCandidate } from '@/services/blockchain'
+import { truncate } from '@/utils/helper'
 import { ContestantStruct, PollStruct, RootState } from '@/utils/types'
 import Image from 'next/image'
 import React from 'react'
 import { BiUpvote } from 'react-icons/bi'
 import { useSelector } from 'react-redux'
-import { toast } from 'react-toastify'
 
 const Contestants: React.FC<{ contestants: ContestantStruct[]; poll: PollStruct }> = ({
   contestants,
@@ -30,21 +29,7 @@ const Contestant: React.FC<{ contestant: ContestantStruct; poll: PollStruct }> =
   const { wallet } = useSelector((states: RootState) => states.globalStates)
 
   const voteContestant = async () => {
-    await toast.promise(
-      new Promise<void>((resolve, reject) => {
-        voteCandidate(poll.id, contestant.id)
-          .then((tx) => {
-            console.log(tx)
-            resolve(tx)
-          })
-          .catch((error) => reject(error))
-      }),
-      {
-        pending: 'Approve transaction...',
-        success: 'Poll contested successfully 👌',
-        error: 'Encountered error 🤯',
-      }
-    )
+    console.log(poll, contestant)
   }
   return (
     <div className="flex justify-start items-center space-x-2 md:space-x-8 mt-5 md:mx-auto">

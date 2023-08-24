@@ -1,10 +1,8 @@
-import { contestPoll } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
 import { PollStruct, RootState } from '@/utils/types'
 import React, { ChangeEvent, FormEvent, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
-import { toast } from 'react-toastify'
 
 const ContestPoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
   const dispatch = useDispatch()
@@ -29,22 +27,8 @@ const ContestPoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
 
     if (!contestant.name || !contestant.image) return
 
-    await toast.promise(
-      new Promise<void>((resolve, reject) => {
-        contestPoll(poll.id, contestant.name, contestant.image)
-          .then((tx) => {
-            closeModal()
-            console.log(tx)
-            resolve(tx)
-          })
-          .catch((error) => reject(error))
-      }),
-      {
-        pending: 'Approve transaction...',
-        success: 'Poll contested successfully 👌',
-        error: 'Encountered error 🤯',
-      }
-    )
+    console.log(contestant)
+    closeModal()
   }
 
   const closeModal = () => {

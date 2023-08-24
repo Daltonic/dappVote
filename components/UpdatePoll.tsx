@@ -1,10 +1,9 @@
-import { formatTimestamp, updatePoll } from '@/services/blockchain'
+import { formatTimestamp } from '@/utils/helper'
 import { globalActions } from '@/store/globalSlices'
 import { PollParams, PollStruct, RootState } from '@/utils/types'
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
-import { toast } from 'react-toastify'
 
 const UpdatePoll: React.FC<{ pollData: PollStruct }> = ({ pollData }) => {
   const dispatch = useDispatch()
@@ -40,22 +39,8 @@ const UpdatePoll: React.FC<{ pollData: PollStruct }> = ({ pollData }) => {
     poll.startsAt = new Date(poll.startsAt).getTime()
     poll.endsAt = new Date(poll.endsAt).getTime()
 
-    await toast.promise(
-      new Promise<void>((resolve, reject) => {
-        updatePoll(pollData.id, poll)
-          .then((tx) => {
-            closeModal()
-            console.log(tx)
-            resolve(tx)
-          })
-          .catch((error) => reject(error))
-      }),
-      {
-        pending: 'Approve transaction...',
-        success: 'Poll updated successfully 👌',
-        error: 'Encountered error 🤯',
-      }
-    )
+    console.log(poll)
+    closeModal()
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
