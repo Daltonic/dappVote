@@ -1,15 +1,15 @@
-import { createPoll } from '@/services/blockchain'
+import { formatTimestamp, updatePoll } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
-import { PollParams, RootState } from '@/utils/types'
-import React, { ChangeEvent, FormEvent, useState } from 'react'
+import { PollParams, PollStruct, RootState } from '@/utils/types'
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 
-const CreatePoll: React.FC = () => {
+const UpdatePoll: React.FC<{ pollData: PollStruct }> = ({ pollData }) => {
   const dispatch = useDispatch()
-  const { setCreateModal } = globalActions
-  const { createModal } = useSelector((states: RootState) => states.globalStates)
+  const { setUpdateModal } = globalActions
+  const { updateModal } = useSelector((states: RootState) => states.globalStates)
 
   const [poll, setPoll] = useState<PollParams>({
     image: '',
@@ -19,7 +19,20 @@ const CreatePoll: React.FC = () => {
     endsAt: '',
   })
 
-  const handleSubmit = async (e: FormEvent) => {
+  useEffect(() => {
+    if (pollData) {
+      const { image, title, description, startsAt, endsAt } = pollData
+      setPoll({
+        image,
+        title,
+        description,
+        startsAt: formatTimestamp(startsAt),
+        endsAt: formatTimestamp(endsAt),
+      })
+    }
+  }, [pollData])
+
+  const handleUpdate = async (e: FormEvent) => {
     e.preventDefault()
 
     if (!poll.image || !poll.title || !poll.description || !poll.startsAt || !poll.endsAt) return
@@ -29,7 +42,7 @@ const CreatePoll: React.FC = () => {
 
     await toast.promise(
       new Promise<void>((resolve, reject) => {
-        createPoll(poll)
+        updatePoll(pollData.id, poll)
           .then((tx) => {
             closeModal()
             console.log(tx)
@@ -39,7 +52,7 @@ const CreatePoll: React.FC = () => {
       }),
       {
         pending: 'Approve transaction...',
-        success: 'Poll created successfully 👌',
+        success: 'Poll updated successfully 👌',
         error: 'Encountered error 🤯',
       }
     )
@@ -54,32 +67,25 @@ const CreatePoll: React.FC = () => {
   }
 
   const closeModal = () => {
-    dispatch(setCreateModal('scale-0'))
-    setPoll({
-      image: '',
-      title: '',
-      description: '',
-      startsAt: '',
-      endsAt: '',
-    })
+    dispatch(setUpdateModal('scale-0'))
   }
 
   return (
     <div
       className={`fixed top-0 left-0 w-screen h-screen flex items-center justify-center
-    bg-black bg-opacity-50 transform z-50 transition-transform duration-300 ${createModal}`}
+    bg-black bg-opacity-50 transform z-50 transition-transform duration-300 ${updateModal}`}
     >
       <div className="bg-[#0c0c10] text-[#BBBBBB] shadow-lg shadow-[#1B5CFE] rounded-xl w-11/12 md:w-2/5 h-7/12 p-6">
         <div className="flex flex-col">
           <div className="flex flex-row justify-between items-center">
-            <p className="font-semibold">Add Poll</p>
+            <p className="font-semibold">Edit Poll</p>
             <button onClick={closeModal} className="border-0 bg-transparent focus:outline-none">
               <FaTimes />
             </button>
           </div>
 
           <form
-            onSubmit={handleSubmit}
+            onSubmit={handleUpdate}
             className="flex flex-col justify-center items-start rounded-xl mt-5 mb-5"
           >
             <div className="py-4 w-full border border-[#212D4A] rounded-full flex items-center px-4 mb-3 mt-2">
@@ -162,7 +168,7 @@ const CreatePoll: React.FC = () => {
               className="h-[48px] w-full block mt-2 px-3 rounded-full text-sm font-bold
               transition-all duration-300 bg-[#1B5CFE] hover:bg-blue-500"
             >
-              Create Poll
+              Update Poll
             </button>
           </form>
         </div>
@@ -171,4 +177,4 @@ const CreatePoll: React.FC = () => {
   )
 }
 
-export default CreatePoll
+export default UpdatePoll
