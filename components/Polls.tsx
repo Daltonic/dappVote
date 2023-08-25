@@ -43,7 +43,9 @@ const Poll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
           className="w-full h-[257px] gap-[14px] rounded-[24px] space-y-5
                 md:w-[352px] md:h-[280px] bg-[#151515] px-[15px] py-[18px] md:px-[22px]"
         >
-          <h1 className="text-[18px] font-[600px]">{poll.title}</h1>
+          <h1 className="text-[18px] font-[600px]">
+            {truncate({ text: poll.description, startChars: 30, endChars: 0, maxLength: 33 })}
+          </h1>
           <p className="text-[14px] font-[400px]">
             {truncate({ text: poll.description, startChars: 104, endChars: 0, maxLength: 107 })}
           </p>

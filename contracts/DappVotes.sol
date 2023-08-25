@@ -106,17 +106,17 @@ contract DappVotes {
 
   function getPolls() public view returns (PollStruct[] memory Polls) {
     uint available;
-    for (uint256 i = 1; i <= totalPolls.current(); i++) {
-      if (!polls[i].deleted) available++;
+    for (uint i = 1; i <= totalPolls.current(); i++) {
+        if(!polls[i].deleted) available++;
     }
 
     Polls = new PollStruct[](available);
     uint index;
 
-    for (uint256 i = 1; i <= totalPolls.current(); i++) {
-      if (!polls[i].deleted) {
-        Polls[index++] = polls[i];
-      }
+    for (uint i = 1; i <= totalPolls.current(); i++) {
+        if(!polls[i].deleted) {
+            Polls[index++] = polls[i];
+        }
     }
   }
 
@@ -141,23 +141,23 @@ contract DappVotes {
     polls[id].contestants++;
   }
 
-  function getContestant(uint pollId, uint cid) public view returns (ContestantStruct memory) {
-    return contestants[pollId][cid];
+  function getContestant(uint id, uint cid) public view returns (ContestantStruct memory) {
+    return contestants[id][cid];
   }
 
-  function getContestants(uint pollId) public view returns (ContestantStruct[] memory Contestants) {
+  function getContestants(uint id) public view returns (ContestantStruct[] memory Contestants) {
     uint available;
-    for (uint256 i = 1; i <= totalContestants.current(); i++) {
-      if (contestants[pollId][i].id == i) available++;
+    for (uint i = 1; i <= totalContestants.current(); i++) {
+        if(contestants[id][i].id == i) available++;
     }
 
     Contestants = new ContestantStruct[](available);
     uint index;
 
-    for (uint256 i = 1; i <= totalContestants.current(); i++) {
-      if (contestants[pollId][i].id == i) {
-        Contestants[index++] = contestants[pollId][i];
-      }
+    for (uint i = 1; i <= totalContestants.current(); i++) {
+        if(contestants[id][i].id == i) {
+            Contestants[index++] = contestants[id][i];
+        }
     }
   }
 
@@ -165,6 +165,7 @@ contract DappVotes {
     require(pollExist[id], 'Poll not found');
     require(!voted[id][msg.sender], 'Already voted');
     require(!polls[id].deleted, 'Polling not available');
+    require(polls[id].contestants > 1, 'Not enough contestants');
     require(
       currentTime() >= polls[id].startsAt && currentTime() < polls[id].endsAt,
       'Voting must be in session'
