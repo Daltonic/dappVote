@@ -15,6 +15,7 @@ if (typeof window !== 'undefined') {
   ethereum = (window as any).ethereum
 }
 
+
 const getEthereumContract = async () => {
   const accounts = await ethereum?.request?.({ method: 'eth_accounts' })
   const provider = accounts?.[0]

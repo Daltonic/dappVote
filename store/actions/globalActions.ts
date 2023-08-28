@@ -26,4 +26,7 @@ export const globalActions = {
   setContestants: (state: GlobalState, action: PayloadAction<ContestantStruct[]>) => {
     state.contestants = action.payload
   },
+  setCurrentUser: (state: GlobalState, action: PayloadAction<any>) => {
+    state.currentUser = action.payload
+  },
 }

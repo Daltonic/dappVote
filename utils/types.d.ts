@@ -47,6 +47,7 @@ export interface GlobalState {
   polls: PollStruct[]
   poll: PollStruct | null
   contestants: ContestantStruct[]
+  currentUser: PollStruct | null
 }
 
 export interface RootState {

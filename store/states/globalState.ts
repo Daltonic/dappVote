@@ -9,4 +9,5 @@ export const globalStates: GlobalState = {
   polls: [],
   poll: null,
   contestants: [],
+  currentUser: null,
 }
