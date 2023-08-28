@@ -8,15 +8,18 @@ const CometChatNoSSR = () => {
   const { setCurrentUser } = globalActions
   const dispatch = useDispatch()
 
-  console.log(process.env.NEXT_APP_RPC_URL);
-
   useEffect(() => {
-    initCometChat(CometChat).then(() => {
-      checkAuthState(CometChat).then((user) => {
-        dispatch(setCurrentUser(JSON.parse(JSON.stringify(user))))
+    const fetchCometChat = async () => {
+      initCometChat(CometChat).then(() => {
+        checkAuthState(CometChat).then((user) => {
+          dispatch(setCurrentUser(JSON.parse(JSON.stringify(user))))
+        })
       })
-    })
+    }
+
+    fetchCometChat()
   }, [dispatch, setCurrentUser])
+
   return null
 }
 

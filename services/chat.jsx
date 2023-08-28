@@ -1,5 +1,3 @@
-
-
 const CONSTANTS = {
   APP_ID: process.env.NEXT_PUBLIC_COMET_CHAT_APP_ID,
   REGION: process.env.NEXT_PUBLIC_COMET_CHAT_AUTH_KEY,
