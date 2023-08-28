@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@cometchat-pro/chat": "3.0.13",
+    "@headlessui/react": "1.7.17",
     "@openzeppelin/test-helpers": "0.5.16",
     "@reduxjs/toolkit": "1.9.3",
     "ethers": "^5.4.7",

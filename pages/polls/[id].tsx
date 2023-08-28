@@ -12,6 +12,7 @@ import { globalActions } from '@/store/globalSlices'
 import { useEffect } from 'react'
 import UpdatePoll from '@/components/UpdatePoll'
 import DeletePoll from '@/components/DeletePoll'
+import ChatButton from '@/components/ChatButton'
 
 export default function Polls({
   pollData,
@@ -52,9 +53,15 @@ export default function Polls({
           <Footer />
         </section>
 
-        {poll && <ContestPoll poll={poll} />}
-        {poll && <DeletePoll poll={poll} />}
-        {poll && <UpdatePoll pollData={poll} />}
+        {poll && (
+          <>
+            <Details poll={poll} />
+            <UpdatePoll pollData={poll} />
+            <DeletePoll poll={poll} />
+            <ContestPoll poll={poll} />
+            <ChatButton />
+          </>
+        )}
       </div>
     </>
   )

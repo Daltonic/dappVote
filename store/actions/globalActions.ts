@@ -17,6 +17,9 @@ export const globalActions = {
   setContestModal: (state: GlobalState, action: PayloadAction<string>) => {
     state.contestModal = action.payload
   },
+  setChatModal: (state: GlobalState, action: PayloadAction<string>) => {
+    state.chatModal = action.payload
+  },
   setPolls: (state: GlobalState, action: PayloadAction<PollStruct[]>) => {
     state.polls = action.payload
   },
