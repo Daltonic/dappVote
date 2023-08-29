@@ -16,7 +16,6 @@ const ChatButton = () => {
   const { setCurrentUser, setChatModal } = globalActions
   const { wallet, currentUser } = useSelector((states: RootState) => states.globalStates)
   const CometChat = (window as any).CometChat
-  
 
   const handleSignUp = async () => {
     await toast.promise(
@@ -41,7 +40,7 @@ const ChatButton = () => {
       new Promise((resolve, reject) => {
         loginWithCometChat(CometChat, wallet)
           .then((user) => {
-            dispatch(setCurrentUser(user))
+            dispatch(setCurrentUser(JSON.parse(JSON.stringify(user))))
             resolve(user)
           })
           .catch((error) => {
@@ -61,7 +60,10 @@ const ChatButton = () => {
     await toast.promise(
       new Promise((resolve, reject) => {
         logOutWithCometChat(CometChat)
-          .then(() => resolve(null))
+          .then(() => {
+            dispatch(setCurrentUser(null))
+            resolve(null)
+          })
           .catch((error) => {
             alert(JSON.stringify(error))
             reject(error)
