@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { globalActions } from '@/store/globalSlices'
 import { RootState } from '@/utils/types'
 
-const ChatButton = () => {
+const ChatButton: React.FC = () => {
   const dispatch = useDispatch()
   const { setCurrentUser, setChatModal } = globalActions
   const { wallet, currentUser } = useSelector((states: RootState) => states.globalStates)
@@ -20,7 +20,7 @@ const ChatButton = () => {
   const handleSignUp = async () => {
     await toast.promise(
       new Promise((resolve, reject) => {
-        signUpWithCometChat(CometChat, wallet)
+        signUpWithCometChat(wallet)
           .then((user) => resolve(user))
           .catch((error) => {
             alert(JSON.stringify(error))
@@ -38,7 +38,7 @@ const ChatButton = () => {
   const handleLogin = async () => {
     await toast.promise(
       new Promise((resolve, reject) => {
-        loginWithCometChat(CometChat, wallet)
+        loginWithCometChat(wallet)
           .then((user) => {
             dispatch(setCurrentUser(JSON.parse(JSON.stringify(user))))
             resolve(user)
@@ -59,7 +59,7 @@ const ChatButton = () => {
   const handleLogout = async () => {
     await toast.promise(
       new Promise((resolve, reject) => {
-        logOutWithCometChat(CometChat)
+        logOutWithCometChat()
           .then(() => {
             dispatch(setCurrentUser(null))
             resolve(null)

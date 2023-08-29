@@ -1,17 +1,16 @@
 import { initCometChat, checkAuthState } from '@/services/chat'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { globalActions } from '@/store/globalSlices'
 import { useDispatch } from 'react-redux'
 
-const CometChatNoSSR = () => {
-  window.CometChat = require('@cometchat-pro/chat').CometChat
+const CometChatNoSSR: React.FC = () => {
   const { setCurrentUser } = globalActions
   const dispatch = useDispatch()
 
   useEffect(() => {
     const fetchCometChat = async () => {
-      initCometChat(CometChat).then(() => {
-        checkAuthState(CometChat).then((user) => {
+      initCometChat().then(() => {
+        checkAuthState().then((user) => {
           dispatch(setCurrentUser(JSON.parse(JSON.stringify(user))))
         })
       })

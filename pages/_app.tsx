@@ -10,6 +10,7 @@ import CometChatNoSSR from '@/components/CometChatNoSSR'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const [showChild, setShowChild] = useState<boolean>(false)
+  
   useEffect(() => {
     checkWallet()
     setShowChild(true)

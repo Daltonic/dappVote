@@ -32,5 +32,5 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "components/CometChatNoSSR.jsx", "services/chat.ts", "components/ChatButton.tsx", "pages/polls/[id].jsx", "components/ChatButton2.jsx", "pages/dummy.jsx"  ]
+, "components/CometChatNoSSR.tsx", "services/chat.ts", "components/ChatButton.tsx", "pages/polls/[id].jsx", "components/ChatButton2.jsx", "pages/dummy.jsx"  ]
 }
