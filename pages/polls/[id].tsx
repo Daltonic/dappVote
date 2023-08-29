@@ -13,6 +13,7 @@ import { useEffect } from 'react'
 import UpdatePoll from '@/components/UpdatePoll'
 import DeletePoll from '@/components/DeletePoll'
 import ChatButton from '@/components/ChatButton'
+import ChatModal from '@/components/ChatModal'
 
 export default function Polls({
   pollData,
@@ -59,6 +60,7 @@ export default function Polls({
             <DeletePoll poll={poll} />
             <ContestPoll poll={poll} />
             <ChatButton />
+            <ChatModal />
           </>
         )}
       </div>

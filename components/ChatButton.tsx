@@ -15,7 +15,6 @@ const ChatButton: React.FC = () => {
   const dispatch = useDispatch()
   const { setCurrentUser, setChatModal } = globalActions
   const { wallet, currentUser } = useSelector((states: RootState) => states.globalStates)
-  const CometChat = (window as any).CometChat
 
   const handleSignUp = async () => {
     await toast.promise(
