@@ -55,7 +55,6 @@ export default function Polls({
 
         {poll && (
           <>
-            <Details poll={poll} />
             <UpdatePoll pollData={poll} />
             <DeletePoll poll={poll} />
             <ContestPoll poll={poll} />

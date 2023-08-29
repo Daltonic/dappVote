@@ -1,8 +1,13 @@
+import { store } from '@/store'
+import { globalActions } from '@/store/globalSlices'
+
 const CONSTANTS = {
   APP_ID: process.env.NEXT_PUBLIC_COMET_CHAT_APP_ID,
   REGION: process.env.NEXT_PUBLIC_COMET_CHAT_AUTH_KEY,
   Auth_Key: process.env.NEXT_PUBLIC_COMET_CHAT_REGION,
 }
+
+const { setCurrentUser } = globalActions
 
 const initCometChat = async (CometChat) => {
   const appID = CONSTANTS.APP_ID
@@ -13,7 +18,7 @@ const initCometChat = async (CometChat) => {
     .setRegion(region)
     .build()
 
-  await CometChat.init(appID, appSetting)
+  CometChat.init(appID, appSetting)
     .then(() => console.log('Initialization completed successfully'))
     .catch((error) => console.log(error))
 }
@@ -43,15 +48,21 @@ const signUpWithCometChat = async (CometChat, UID) => {
 const logOutWithCometChat = async (CometChat) => {
   return new Promise(async (resolve, reject) => {
     await CometChat.logout()
-      .then(() => resolve())
-      .catch(() => reject())
+      .then(() => {
+        store.dispatch(setCurrentUser(null))
+        resolve(null)
+      })
+      .catch((error) => reject(error))
   })
 }
 
 const checkAuthState = async (CometChat) => {
   return new Promise(async (resolve, reject) => {
     await CometChat.getLoggedinUser()
-      .then((user) => resolve(user))
+      .then((user) => {
+        store.dispatch(setCurrentUser(user))
+        resolve(user)
+      })
       .catch((error) => reject(error))
   })
 }
@@ -95,9 +106,9 @@ const getMessages = async (CometChat, GUID) => {
     .build()
 
   return new Promise(async (resolve, reject) => {
-    await messagesRequest
+    messagesRequest
       .fetchPrevious()
-      .then((messages) => resolve(messages.filter((msg) => msg.type == 'text')))
+      .then((messages) => resolve(messages.filter((msg) => msg.type === 'text')))
       .catch((error) => reject(error))
   })
 }
@@ -114,7 +125,7 @@ const sendMessage = async (CometChat, receiverID, messageText) => {
 
 const listenForMessage = async (CometChat, listenerID) => {
   return new Promise(async (resolve, reject) => {
-    CometChat.addMessageListener(
+    await CometChat.addMessageListener(
       listenerID,
       new CometChat.MessageListener({
         onTextMessageReceived: (message) => resolve(message),

@@ -8,18 +8,20 @@ import { Menu } from '@headlessui/react'
 import { toast } from 'react-toastify'
 import { logOutWithCometChat, loginWithCometChat, signUpWithCometChat } from '../services/chat'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@/utils/types'
 import { globalActions } from '@/store/globalSlices'
+import { RootState } from '@/utils/types'
 
-const ChatButton: React.FC = () => {
+const ChatButton = () => {
   const dispatch = useDispatch()
   const { setCurrentUser, setChatModal } = globalActions
   const { wallet, currentUser } = useSelector((states: RootState) => states.globalStates)
+  const CometChat = (window as any).CometChat
+  
 
   const handleSignUp = async () => {
     await toast.promise(
       new Promise((resolve, reject) => {
-        signUpWithCometChat(wallet)
+        signUpWithCometChat(CometChat, wallet)
           .then((user) => resolve(user))
           .catch((error) => {
             alert(JSON.stringify(error))
@@ -37,7 +39,7 @@ const ChatButton: React.FC = () => {
   const handleLogin = async () => {
     await toast.promise(
       new Promise((resolve, reject) => {
-        loginWithCometChat(wallet)
+        loginWithCometChat(CometChat, wallet)
           .then((user) => {
             dispatch(setCurrentUser(user))
             resolve(user)
@@ -58,11 +60,8 @@ const ChatButton: React.FC = () => {
   const handleLogout = async () => {
     await toast.promise(
       new Promise((resolve, reject) => {
-        logOutWithCometChat()
-          .then(() => {
-            dispatch(setCurrentUser(null))
-            resolve(null)
-          })
+        logOutWithCometChat(CometChat)
+          .then(() => resolve(null))
           .catch((error) => {
             alert(JSON.stringify(error))
             reject(error)
