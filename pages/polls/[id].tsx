@@ -44,7 +44,7 @@ export default function Polls({
     }
 
     fetchData()
-  }, [dispatch, setPoll, setContestants, setGroup, contestantData, pollData, id, currentUser])
+  }, [dispatch, setPoll, setContestants, setGroup, contestantData, pollData, id, currentUser, group])
 
   return (
     <>
@@ -74,7 +74,7 @@ export default function Polls({
             <UpdatePoll pollData={poll} />
             <DeletePoll poll={poll} />
             <ContestPoll poll={poll} />
-            <ChatModal poll={poll} group={group} />
+            <ChatModal group={group} />
             <ChatButton poll={poll} group={group} />
           </>
         )}

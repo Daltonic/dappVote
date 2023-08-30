@@ -1,29 +1,47 @@
 import Identicon from 'react-identicons'
 import { globalActions } from '@/store/globalSlices'
-import { PollStruct, RootState } from '@/utils/types'
-import React, { FormEvent, useState } from 'react'
+import { RootState } from '@/utils/types'
+import React, { FormEvent, useEffect, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { truncate } from '@/services/blockchain'
-import { sendMessage } from '@/services/chat'
+import { getMessages, listenForMessage, sendMessage } from '@/services/chat'
 
-const ChatModal: React.FC<{ poll: PollStruct; group: any }> = ({ poll, group }) => {
+const ChatModal: React.FC<{ group: any }> = ({ group }) => {
   const dispatch = useDispatch()
   const { setChatModal } = globalActions
   const { wallet, chatModal } = useSelector((states: RootState) => states.globalStates)
   const [message, setMessage] = useState<string>('')
+  const [messages, setMessages] = useState<any[]>([])
+
+  useEffect(() => {
+    getMessages(group?.guid).then((msgs) => {
+      setMessages(msgs as any[])
+      scrollToEnd()
+    })
+
+    listenForMessage(group?.guid).then((msg) => {
+      setMessages((prevMsgs) => [...prevMsgs, msg])
+      scrollToEnd()
+    })
+  }, [group?.guid, messages])
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-
     if (!message) return
 
-    await sendMessage(String(poll.id), message)
+    await sendMessage(group?.guid, message)
       .then((msg) => {
-        console.log(msg)
+        setMessages((prevMsgs) => [...prevMsgs, msg])
         setMessage('')
+        scrollToEnd()
       })
       .catch((error) => console.log(error))
+  }
+
+  const scrollToEnd = () => {
+    const elmnt: HTMLElement | null = document.getElementById('messages-container')
+    if (elmnt) elmnt.scrollTop = elmnt.scrollHeight
   }
 
   const closeModal = () => {
@@ -49,18 +67,16 @@ const ChatModal: React.FC<{ poll: PollStruct; group: any }> = ({ poll, group }) 
             id="messages-container"
             className="flex flex-col justify-center items-start rounded-xl my-5 pt-5 max-h-[20rem] overflow-y-auto"
           >
-            <div className="py-10" />
-            {Array(7)
-              .fill(2)
-              .map((msg: any, i: number) => (
-                <Message
-                  text="Hello Friend"
-                  owner="0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
-                  time={Date.now()}
-                  you={wallet === '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'}
-                  key={i}
-                />
-              ))}
+            <div className="py-4" />
+            {messages.map((msg: any, i: number) => (
+              <Message
+                text={msg.text}
+                owner={msg.sender.uid}
+                time={Number(msg.sendAt + '000')}
+                you={wallet === msg.sender.uid}
+                key={i}
+              />
+            ))}
           </div>
 
           <form
@@ -98,9 +114,7 @@ const Message = ({ text, time, owner, you }) => {
           <h3 className="text-md font-bold">
             {you ? '@You' : truncate({ text: owner, startChars: 4, endChars: 4, maxLength: 11 })}
           </h3>
-          <p className="text-gray-500 text-xs font-semibold space-x-2 w-4/5">
-            {text} <span className="font-light text-xs">{new Date(time).toLocaleString()}</span>
-          </p>
+          <p className="text-gray-500 text-xs font-semibold space-x-2 w-4/5">{text}</p>
         </div>
       </div>
     </div>
