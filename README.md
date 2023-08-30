@@ -4,17 +4,17 @@ Read the full tutorial here: [**>> Build a Decentralized Voting Dapp with Next.j
 
 This example shows Build a Decentralized Voting Dapp with Next.js, TypeScript, Tailwind CSS, and CometChat:
 
-![Game Play](./screenshots/0.png)
+![Poll Lisiting](./screenshots/0.png)
 
-<center><figcaption>Game Play to Earn</figcaption></center>
+<center><figcaption>Poll Listing</figcaption></center>
 
-![Result and Payout](./screenshots/1.png)
+![Poll Listing](./screenshots/1.png)
 
-<center><figcaption>Result and Payout</figcaption></center>
+<center><figcaption>Poll Details with Candidates</figcaption></center>
 
-![Play to Earn Live Chat](./screenshots/2.gif)
+![Poll Group Chat](./screenshots/2.gif)
 
-<center><figcaption>Play to Earn Live</figcaption></center>
+<center><figcaption>Poll Group Chat</figcaption></center>
 
 ## Technology
 
