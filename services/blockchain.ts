@@ -4,8 +4,9 @@ import { globalActions } from '@/store/globalSlices'
 import address from '@/artifacts/contractAddress.json'
 import abi from '@/artifacts/contracts/DappVotes.sol/DappVotes.json'
 import { ContestantStruct, PollParams, PollStruct, TruncateParams } from '@/utils/types'
+import { logOutWithCometChat } from './chat'
 
-const { setWallet, setPolls, setPoll, setContestants } = globalActions
+const { setWallet, setPolls, setPoll, setContestants, setCurrentUser } = globalActions
 const ContractAddress = address.address
 const ContractAbi = abi.abi
 let ethereum: any
@@ -14,7 +15,6 @@ let tx: any
 if (typeof window !== 'undefined') {
   ethereum = (window as any).ethereum
 }
-
 
 const getEthereumContract = async () => {
   const accounts = await ethereum?.request?.({ method: 'eth_accounts' })
@@ -50,6 +50,8 @@ const checkWallet = async () => {
     ethereum.on('accountsChanged', async () => {
       store.dispatch(setWallet(accounts?.[0]))
       await checkWallet()
+      await logOutWithCometChat()
+      store.dispatch(setCurrentUser(null))
     })
 
     if (accounts?.length) {

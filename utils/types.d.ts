@@ -47,6 +47,7 @@ export interface GlobalState {
   chatModal: string
   polls: PollStruct[]
   poll: PollStruct | null
+  group: PollStruct | null
   contestants: ContestantStruct[]
   currentUser: PollStruct | null
 }

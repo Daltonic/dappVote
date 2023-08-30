@@ -1,19 +1,25 @@
 import React from 'react'
+import { FaUserPlus } from 'react-icons/fa'
 import { RiArrowDropDownLine } from 'react-icons/ri'
 import { FiLogIn } from 'react-icons/fi'
-import { HiLogin } from 'react-icons/hi'
-import { FaUserFriends } from 'react-icons/fa'
+import { HiLogin, HiUserGroup, HiChat } from 'react-icons/hi'
 import { SiGnuprivacyguard } from 'react-icons/si'
 import { Menu } from '@headlessui/react'
 import { toast } from 'react-toastify'
-import { logOutWithCometChat, loginWithCometChat, signUpWithCometChat } from '../services/chat'
+import {
+  createNewGroup,
+  joinGroup,
+  logOutWithCometChat,
+  loginWithCometChat,
+  signUpWithCometChat,
+} from '../services/chat'
 import { useDispatch, useSelector } from 'react-redux'
 import { globalActions } from '@/store/globalSlices'
-import { RootState } from '@/utils/types'
+import { PollStruct, RootState } from '@/utils/types'
 
-const ChatButton: React.FC = () => {
+const ChatButton: React.FC<{ poll: PollStruct; group: any }> = ({ poll, group }) => {
   const dispatch = useDispatch()
-  const { setCurrentUser, setChatModal } = globalActions
+  const { setCurrentUser, setChatModal, setGroup } = globalActions
   const { wallet, currentUser } = useSelector((states: RootState) => states.globalStates)
 
   const handleSignUp = async () => {
@@ -76,6 +82,48 @@ const ChatButton: React.FC = () => {
     )
   }
 
+  const handleCreateGroup = async () => {
+    await toast.promise(
+      new Promise((resolve, reject) => {
+        createNewGroup(`guid_${poll.id}`, poll.title)
+          .then((group) => {
+            dispatch(setGroup(JSON.parse(JSON.stringify(group))))
+            resolve(group)
+          })
+          .catch((error) => {
+            alert(JSON.stringify(error))
+            reject(error)
+          })
+      }),
+      {
+        pending: 'Creating group...',
+        success: 'Group created successfully 👌',
+        error: 'Encountered error 🤯',
+      }
+    )
+  }
+
+  const handleJoinGroup = async () => {
+    await toast.promise(
+      new Promise((resolve, reject) => {
+        joinGroup(`guid_${poll.id}`)
+          .then((group) => {
+            dispatch(setGroup(JSON.parse(JSON.stringify(group))))
+            resolve(group)
+          })
+          .catch((error) => {
+            alert(JSON.stringify(error))
+            reject(error)
+          })
+      }),
+      {
+        pending: 'Joining group...',
+        success: 'Group joined successfully 👌',
+        error: 'Encountered error 🤯',
+      }
+    )
+  }
+
   return (
     <Menu as="div" className="inline-block text-left mx-auto fixed right-5 bottom-[80px]">
       <Menu.Button
@@ -103,7 +151,7 @@ const ChatButton: React.FC = () => {
                   onClick={handleSignUp}
                 >
                   <SiGnuprivacyguard size={17} />
-                  <span>Chat SignUp</span>
+                  <span>SignUp</span>
                 </button>
               )}
             </Menu.Item>
@@ -123,19 +171,52 @@ const ChatButton: React.FC = () => {
           </>
         ) : (
           <>
-            <Menu.Item>
-              {({ active }) => (
-                <button
-                  className={`flex justify-start items-center space-x-1 ${
-                    active ? 'bg-gray-200 text-black' : 'text-gray-900'
-                  } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  onClick={() => dispatch(setChatModal('scale-100'))}
-                >
-                  <FaUserFriends size={17} />
-                  <span>Chats</span>
-                </button>
-              )}
-            </Menu.Item>
+            {!group && wallet === poll.director && (
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={`flex justify-start items-center space-x-1 ${
+                      active ? 'bg-gray-200 text-black' : 'text-gray-900'
+                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                    onClick={() => handleCreateGroup()}
+                  >
+                    <HiUserGroup size={17} />
+                    <span>Create Group</span>
+                  </button>
+                )}
+              </Menu.Item>
+            )}
+
+            {group && !group.hasJoined && wallet !== poll.director && (
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={`flex justify-start items-center space-x-1 ${
+                      active ? 'bg-gray-200 text-black' : 'text-gray-900'
+                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                    onClick={() => handleJoinGroup()}
+                  >
+                    <FaUserPlus size={17} />
+                    <span>Join Group</span>
+                  </button>
+                )}
+              </Menu.Item>
+            )}
+            {group?.hasJoined && (
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={`flex justify-start items-center space-x-1 ${
+                      active ? 'bg-gray-200 text-black' : 'text-gray-900'
+                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                    onClick={() => dispatch(setChatModal('scale-100'))}
+                  >
+                    <HiChat size={17} />
+                    <span>Chats</span>
+                  </button>
+                )}
+              </Menu.Item>
+            )}
             <Menu.Item>
               {({ active }) => (
                 <button

@@ -1,12 +1,13 @@
 import Identicon from 'react-identicons'
 import { globalActions } from '@/store/globalSlices'
-import { RootState } from '@/utils/types'
+import { PollStruct, RootState } from '@/utils/types'
 import React, { FormEvent, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { truncate } from '@/services/blockchain'
+import { sendMessage } from '@/services/chat'
 
-const ChatModal: React.FC = () => {
+const ChatModal: React.FC<{ poll: PollStruct; group: any }> = ({ poll, group }) => {
   const dispatch = useDispatch()
   const { setChatModal } = globalActions
   const { wallet, chatModal } = useSelector((states: RootState) => states.globalStates)
@@ -17,13 +18,12 @@ const ChatModal: React.FC = () => {
 
     if (!message) return
 
-    // createPoll(poll)
-    //   .then((tx) => {
-    //     closeModal()
-    //     console.log(tx)
-    //     resolve(tx)
-    //   })
-    //   .catch((error) => reject(error))
+    await sendMessage(String(poll.id), message)
+      .then((msg) => {
+        console.log(msg)
+        setMessage('')
+      })
+      .catch((error) => console.log(error))
   }
 
   const closeModal = () => {
@@ -49,16 +49,18 @@ const ChatModal: React.FC = () => {
             id="messages-container"
             className="flex flex-col justify-center items-start rounded-xl my-5 pt-5 max-h-[20rem] overflow-y-auto"
           >
-            <div className='py-10' />
-            {Array(7).fill(2).map((msg: any, i: number) => (
-              <Message
-                text="Hello Friend"
-                owner="0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
-                time={Date.now()}
-                you={wallet === '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'}
-                key={i}
-              />
-            ))}
+            <div className="py-10" />
+            {Array(7)
+              .fill(2)
+              .map((msg: any, i: number) => (
+                <Message
+                  text="Hello Friend"
+                  owner="0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+                  time={Date.now()}
+                  you={wallet === '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'}
+                  key={i}
+                />
+              ))}
           </div>
 
           <form
