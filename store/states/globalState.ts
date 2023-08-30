@@ -6,7 +6,10 @@ export const globalStates: GlobalState = {
   updateModal: 'scale-0',
   deleteModal: 'scale-0',
   contestModal: 'scale-0',
+  chatModal: 'scale-0',
   polls: [],
   poll: null,
+  group: null,
   contestants: [],
+  currentUser: null,
 }

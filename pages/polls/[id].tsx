@@ -9,9 +9,13 @@ import { getContestants, getPoll } from '@/services/blockchain'
 import { ContestantStruct, PollStruct, RootState } from '@/utils/types'
 import { useDispatch, useSelector } from 'react-redux'
 import { globalActions } from '@/store/globalSlices'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import UpdatePoll from '@/components/UpdatePoll'
 import DeletePoll from '@/components/DeletePoll'
+import ChatButton from '@/components/ChatButton'
+import ChatModal from '@/components/ChatModal'
+import { getGroup } from '@/services/chat'
+import { useRouter } from 'next/router'
 
 export default function Polls({
   pollData,
@@ -21,13 +25,26 @@ export default function Polls({
   contestantData: ContestantStruct[]
 }) {
   const dispatch = useDispatch()
-  const { setPoll, setContestants } = globalActions
-  const { poll, contestants } = useSelector((states: RootState) => states.globalStates)
+  const { setPoll, setContestants, setGroup } = globalActions
+  const { poll, contestants, currentUser, group } = useSelector(
+    (states: RootState) => states.globalStates
+  )
+  const router = useRouter()
+  const { id } = router.query
 
   useEffect(() => {
     dispatch(setPoll(pollData))
     dispatch(setContestants(contestantData))
-  }, [dispatch, setPoll, setContestants, contestantData, pollData])
+
+    const fetchData = async () => {
+      setTimeout(async () => {
+        const groupData = await getGroup(`guid_${id}`)
+        if (groupData) dispatch(setGroup(JSON.parse(JSON.stringify(groupData))))
+      }, 500)
+    }
+
+    fetchData()
+  }, [dispatch, setPoll, setContestants, setGroup, contestantData, pollData, id, currentUser, group])
 
   return (
     <>
@@ -52,9 +69,15 @@ export default function Polls({
           <Footer />
         </section>
 
-        {poll && <ContestPoll poll={poll} />}
-        {poll && <DeletePoll poll={poll} />}
-        {poll && <UpdatePoll pollData={poll} />}
+        {poll && (
+          <>
+            <UpdatePoll pollData={poll} />
+            <DeletePoll poll={poll} />
+            <ContestPoll poll={poll} />
+            <ChatModal group={group} />
+            <ChatButton poll={poll} group={group} />
+          </>
+        )}
       </div>
     </>
   )

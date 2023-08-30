@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/daltonic/Sites/dappVotes/contracts/DappVotes.sol": {
-      "lastModificationDate": 1692804233576,
-      "contentHash": "1770b1ab9356bd95e59e2af3b79bb1ef",
+      "lastModificationDate": 1692973875640,
+      "contentHash": "2a66f25c242d4b38862f99d48bb3aa04",
       "sourceName": "contracts/DappVotes.sol",
       "solcConfig": {
         "version": "0.8.17",
