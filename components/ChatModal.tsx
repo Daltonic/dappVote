@@ -13,18 +13,25 @@ const ChatModal: React.FC<{ group: any }> = ({ group }) => {
   const { wallet, chatModal } = useSelector((states: RootState) => states.globalStates)
   const [message, setMessage] = useState<string>('')
   const [messages, setMessages] = useState<any[]>([])
+  const [shouldAutoScroll, setShouldAutoScroll] = useState<boolean>(true)
 
   useEffect(() => {
     getMessages(group?.guid).then((msgs) => {
       setMessages(msgs as any[])
-      scrollToEnd()
+      setShouldAutoScroll(true)
     })
 
     listenForMessage(group?.guid).then((msg) => {
       setMessages((prevMsgs) => [...prevMsgs, msg])
-      scrollToEnd()
+      setShouldAutoScroll(true)
     })
-  }, [group?.guid, messages])
+  }, [group?.guid])
+
+  useEffect(() => {
+    if (shouldAutoScroll) {
+      scrollToEnd()
+    }
+  }, [messages, shouldAutoScroll])
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -33,7 +40,7 @@ const ChatModal: React.FC<{ group: any }> = ({ group }) => {
     await sendMessage(group?.guid, message)
       .then((msg) => {
         setMessages((prevMsgs) => [...prevMsgs, msg])
-        setMessage('')
+        setShouldAutoScroll(true)
         scrollToEnd()
       })
       .catch((error) => console.log(error))
@@ -47,6 +54,7 @@ const ChatModal: React.FC<{ group: any }> = ({ group }) => {
   const closeModal = () => {
     dispatch(setChatModal('scale-0'))
     setMessage('')
+    scrollToEnd()
   }
 
   return (
