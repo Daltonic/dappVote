@@ -42,6 +42,7 @@ const ChatModal: React.FC<{ group: any }> = ({ group }) => {
         setMessages((prevMsgs) => [...prevMsgs, msg])
         setShouldAutoScroll(true)
         scrollToEnd()
+        setMessage('')
       })
       .catch((error) => console.log(error))
   }

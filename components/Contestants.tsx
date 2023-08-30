@@ -62,7 +62,7 @@ const Contestant: React.FC<{ contestant: ContestantStruct; poll: PollStruct }> =
         className="bg-[#151515] h-[229px] w-[186px] sm:w-[253px] sm:h-fit rounded-[24px]
         space-y-2 flex justify-center items-center flex-col pt-2 pb-2 px-3"
       >
-        <h1 className="text-[16px] sm:text-[20px] font-[600px]">{contestant.name}</h1>
+        <h1 className="text-[16px] sm:text-[20px] font-[600px] capitalize">{contestant.name}</h1>
 
         <div
           className="flex items-center justify-center w-full
