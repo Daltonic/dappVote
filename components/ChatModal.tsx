@@ -6,11 +6,12 @@ import { FaTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { truncate } from '@/services/blockchain'
 import { getMessages, listenForMessage, sendMessage } from '@/services/chat'
+import { toast } from 'react-toastify'
 
 const ChatModal: React.FC<{ group: any }> = ({ group }) => {
   const dispatch = useDispatch()
-  const { setChatModal, setCometChat } = globalActions
-  const { wallet, chatModal, CometChat } = useSelector((states: RootState) => states.globalStates)
+  const { setChatModal } = globalActions
+  const { wallet, chatModal } = useSelector((states: RootState) => states.globalStates)
   const [message, setMessage] = useState<string>('')
   const [messages, setMessages] = useState<any[]>([])
   const [shouldAutoScroll, setShouldAutoScroll] = useState<boolean>(true)
@@ -36,7 +37,7 @@ const ChatModal: React.FC<{ group: any }> = ({ group }) => {
         handleListing()
       }
     }, 500)
-  }, [dispatch, setCometChat, CometChat, group?.guid])
+  }, [group?.guid])
 
   useEffect(() => {
     if (shouldAutoScroll) {
@@ -47,6 +48,7 @@ const ChatModal: React.FC<{ group: any }> = ({ group }) => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     if (!message) return
+    if (wallet === '') return toast.warning('Connect wallet first!')
 
     await sendMessage(group?.guid, message)
       .then((msg) => {

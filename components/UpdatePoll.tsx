@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 const UpdatePoll: React.FC<{ pollData: PollStruct }> = ({ pollData }) => {
   const dispatch = useDispatch()
   const { setUpdateModal } = globalActions
-  const { updateModal } = useSelector((states: RootState) => states.globalStates)
+  const { wallet, updateModal } = useSelector((states: RootState) => states.globalStates)
 
   const [poll, setPoll] = useState<PollParams>({
     image: '',
@@ -36,6 +36,7 @@ const UpdatePoll: React.FC<{ pollData: PollStruct }> = ({ pollData }) => {
     e.preventDefault()
 
     if (!poll.image || !poll.title || !poll.description || !poll.startsAt || !poll.endsAt) return
+    if (wallet === '') return toast.warning('Connect wallet first!')
 
     poll.startsAt = new Date(poll.startsAt).getTime()
     poll.endsAt = new Date(poll.endsAt).getTime()
