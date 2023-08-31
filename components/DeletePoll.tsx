@@ -11,10 +11,11 @@ import { useRouter } from 'next/router'
 const DeletePoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
   const dispatch = useDispatch()
   const { setDeleteModal } = globalActions
-  const { deleteModal } = useSelector((states: RootState) => states.globalStates)
+  const { wallet, deleteModal } = useSelector((states: RootState) => states.globalStates)
   const router = useRouter()
 
   const handleDelete = async () => {
+    if (wallet === '') return toast.warning('Connect wallet first!')
     await toast.promise(
       new Promise<void>((resolve, reject) => {
         deletePoll(poll.id)

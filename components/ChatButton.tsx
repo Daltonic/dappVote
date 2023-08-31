@@ -23,6 +23,7 @@ const ChatButton: React.FC<{ poll: PollStruct; group: any }> = ({ poll, group })
   const { wallet, currentUser } = useSelector((states: RootState) => states.globalStates)
 
   const handleSignUp = async () => {
+    if (wallet === '') return toast.warning('Connect wallet first!')
     await toast.promise(
       new Promise((resolve, reject) => {
         signUpWithCometChat(wallet)
@@ -41,6 +42,7 @@ const ChatButton: React.FC<{ poll: PollStruct; group: any }> = ({ poll, group })
   }
 
   const handleLogin = async () => {
+    if (wallet === '') return toast.warning('Connect wallet first!')
     await toast.promise(
       new Promise((resolve, reject) => {
         loginWithCometChat(wallet)
@@ -62,6 +64,7 @@ const ChatButton: React.FC<{ poll: PollStruct; group: any }> = ({ poll, group })
   }
 
   const handleLogout = async () => {
+    if (wallet === '') return toast.warning('Connect wallet first!')
     await toast.promise(
       new Promise((resolve, reject) => {
         logOutWithCometChat()
@@ -83,6 +86,7 @@ const ChatButton: React.FC<{ poll: PollStruct; group: any }> = ({ poll, group })
   }
 
   const handleCreateGroup = async () => {
+    if (wallet === '') return toast.warning('Connect wallet first!')
     await toast.promise(
       new Promise((resolve, reject) => {
         createNewGroup(`guid_${poll.id}`, poll.title)
@@ -104,6 +108,7 @@ const ChatButton: React.FC<{ poll: PollStruct; group: any }> = ({ poll, group })
   }
 
   const handleJoinGroup = async () => {
+    if (wallet === '') return toast.warning('Connect wallet first!')
     await toast.promise(
       new Promise((resolve, reject) => {
         joinGroup(`guid_${poll.id}`)

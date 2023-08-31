@@ -5,11 +5,17 @@ import Image from 'next/image'
 import React from 'react'
 import { MdModeEdit, MdDelete } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
 const Details: React.FC<{ poll: PollStruct }> = ({ poll }) => {
   const dispatch = useDispatch()
   const { setContestModal, setUpdateModal, setDeleteModal } = globalActions
   const { wallet } = useSelector((states: RootState) => states.globalStates)
+
+  const onPressContest = () => {
+    if (wallet === '') return toast.warning('Connect wallet first!')
+    dispatch(setContestModal('scale-100'))
+  }
 
   return (
     <>
@@ -97,7 +103,7 @@ const Details: React.FC<{ poll: PollStruct }> = ({ poll }) => {
             <button
               className="text-black h-[45px] w-[148px] rounded-full transition-all duration-300
               border border-gray-400 bg-white hover:bg-opacity-20 hover:text-white py-2"
-              onClick={() => dispatch(setContestModal('scale-100'))}
+              onClick={onPressContest}
             >
               Contest
             </button>

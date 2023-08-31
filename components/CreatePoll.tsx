@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 const CreatePoll: React.FC = () => {
   const dispatch = useDispatch()
   const { setCreateModal } = globalActions
-  const { createModal } = useSelector((states: RootState) => states.globalStates)
+  const { wallet, createModal } = useSelector((states: RootState) => states.globalStates)
 
   const [poll, setPoll] = useState<PollParams>({
     image: '',
@@ -23,6 +23,7 @@ const CreatePoll: React.FC = () => {
     e.preventDefault()
 
     if (!poll.image || !poll.title || !poll.description || !poll.startsAt || !poll.endsAt) return
+    if (wallet === '') return toast.warning('Connect wallet first!')
 
     poll.startsAt = new Date(poll.startsAt).getTime()
     poll.endsAt = new Date(poll.endsAt).getTime()

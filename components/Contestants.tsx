@@ -30,6 +30,7 @@ const Contestant: React.FC<{ contestant: ContestantStruct; poll: PollStruct }> =
   const { wallet } = useSelector((states: RootState) => states.globalStates)
 
   const voteContestant = async () => {
+    if (wallet === '') return toast.warning('Connect wallet first!')
     await toast.promise(
       new Promise<void>((resolve, reject) => {
         voteCandidate(poll.id, contestant.id)

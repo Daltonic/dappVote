@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 const ContestPoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
   const dispatch = useDispatch()
   const { setContestModal } = globalActions
-  const { contestModal } = useSelector((states: RootState) => states.globalStates)
+  const { wallet, contestModal } = useSelector((states: RootState) => states.globalStates)
 
   const [contestant, setContestant] = useState({
     name: '',
@@ -28,6 +28,7 @@ const ContestPoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
     e.preventDefault()
 
     if (!contestant.name || !contestant.image) return
+    if (wallet === '') return toast.warning('Connect wallet first!')
 
     await toast.promise(
       new Promise<void>((resolve, reject) => {
