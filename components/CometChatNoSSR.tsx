@@ -8,16 +8,15 @@ const CometChatNoSSR = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    setTimeout(() => {
+    setTimeout(async () => {
       if (typeof window !== 'undefined') {
-        initCometChat().then(() => {
-          checkAuthState().then((user) => {
-            dispatch(setCurrentUser(JSON.parse(JSON.stringify(user))))
-          })
+        await initCometChat()
+        checkAuthState().then((user) => {
+          dispatch(setCurrentUser(JSON.parse(JSON.stringify(user))))
         })
       }
     }, 500)
-  }, [setCurrentUser])
+  }, [dispatch, setCurrentUser])
 
   return null
 }
