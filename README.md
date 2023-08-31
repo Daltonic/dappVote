@@ -77,4 +77,4 @@ Access the [Teaching Guide Here](https://docs.google.com/document/d/13bBRyAO0bEw
 - 🎅 [TypeScript](https://www.typescriptlang.org/)
 - 🐻 [Solidity](https://soliditylang.org/)
 - 👀 [EthersJs](https://docs.ethers.io/v5/)
-<!-- - ✨ [Live Demo](https://play-to-earn-three.vercel.app/) -->
+- ✨ [Live Demo](https://dapp-vote-three.vercel.app/)

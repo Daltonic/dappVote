@@ -9,23 +9,35 @@ import { getMessages, listenForMessage, sendMessage } from '@/services/chat'
 
 const ChatModal: React.FC<{ group: any }> = ({ group }) => {
   const dispatch = useDispatch()
-  const { setChatModal } = globalActions
-  const { wallet, chatModal } = useSelector((states: RootState) => states.globalStates)
+  const { setChatModal, setCometChat } = globalActions
+  const { wallet, chatModal, CometChat } = useSelector((states: RootState) => states.globalStates)
   const [message, setMessage] = useState<string>('')
   const [messages, setMessages] = useState<any[]>([])
   const [shouldAutoScroll, setShouldAutoScroll] = useState<boolean>(true)
 
   useEffect(() => {
-    getMessages(group?.guid).then((msgs) => {
-      setMessages(msgs as any[])
-      setShouldAutoScroll(true)
-    })
+    const handleListing = (CometChat: any) => {
+      listenForMessage(CometChat, group?.guid).then((msg) => {
+        setMessages((prevMsgs) => [...prevMsgs, msg])
+        setShouldAutoScroll(true)
+      })
+    }
 
-    listenForMessage(group?.guid).then((msg) => {
-      setMessages((prevMsgs) => [...prevMsgs, msg])
-      setShouldAutoScroll(true)
-    })
-  }, [group?.guid])
+    const handleMessageRetrieval = (CometChat: any) => {
+      getMessages(CometChat, group?.guid).then((msgs) => {
+        setMessages(msgs as any[])
+        setShouldAutoScroll(true)
+      })
+    }
+
+    setTimeout(async () => {
+      if (typeof window !== 'undefined') {
+        const CometChat = (window as any).CometChat
+        handleMessageRetrieval(CometChat)
+        handleListing(CometChat)
+      }
+    }, 500)
+  }, [dispatch, setCometChat, CometChat, group?.guid])
 
   useEffect(() => {
     if (shouldAutoScroll) {
@@ -37,7 +49,7 @@ const ChatModal: React.FC<{ group: any }> = ({ group }) => {
     e.preventDefault()
     if (!message) return
 
-    await sendMessage(group?.guid, message)
+    await sendMessage(CometChat, group?.guid, message)
       .then((msg) => {
         setMessages((prevMsgs) => [...prevMsgs, msg])
         setShouldAutoScroll(true)

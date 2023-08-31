@@ -35,4 +35,7 @@ export const globalActions = {
   setCurrentUser: (state: GlobalState, action: PayloadAction<any>) => {
     state.currentUser = action.payload
   },
+  setCometChat: (state: GlobalState, action: PayloadAction<any>) => {
+    state.CometChat = action.payload
+  },
 }

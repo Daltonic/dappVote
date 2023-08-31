@@ -50,6 +50,7 @@ export interface GlobalState {
   group: PollStruct | null
   contestants: ContestantStruct[]
   currentUser: PollStruct | null
+  CometChat: any | null
 }
 
 export interface RootState {

@@ -37,14 +37,27 @@ export default function Polls({
     dispatch(setContestants(contestantData))
 
     const fetchData = async () => {
-      setTimeout(async () => {
-        const groupData = await getGroup(`guid_${id}`)
-        if (groupData) dispatch(setGroup(JSON.parse(JSON.stringify(groupData))))
-      }, 500)
+      if (typeof window !== 'undefined') {
+        const CometChat = (window as any).CometChat
+        setTimeout(async () => {
+          const groupData = await getGroup(CometChat, `guid_${id}`)
+          if (groupData) dispatch(setGroup(JSON.parse(JSON.stringify(groupData))))
+        }, 500)
+      }
     }
 
     fetchData()
-  }, [dispatch, setPoll, setContestants, setGroup, contestantData, pollData, id, currentUser, group])
+  }, [
+    dispatch,
+    setPoll,
+    setContestants,
+    setGroup,
+    contestantData,
+    pollData,
+    id,
+    currentUser,
+    group,
+  ])
 
   return (
     <>
