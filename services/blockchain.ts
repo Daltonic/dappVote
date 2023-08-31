@@ -10,12 +10,10 @@ const { setWallet, setPolls, setPoll, setContestants, setCurrentUser } = globalA
 const ContractAddress = address.address
 const ContractAbi = abi.abi
 let ethereum: any
-let CometChat: any
 let tx: any
 
 if (typeof window !== 'undefined') {
   ethereum = (window as any).ethereum
-  CometChat = (window as any).CometChat
 }
 
 const getEthereumContract = async () => {
@@ -52,7 +50,7 @@ const checkWallet = async () => {
     ethereum.on('accountsChanged', async () => {
       store.dispatch(setWallet(accounts?.[0]))
       await checkWallet()
-      await logOutWithCometChat(CometChat)
+      await logOutWithCometChat()
       store.dispatch(setCurrentUser(null))
     })
 

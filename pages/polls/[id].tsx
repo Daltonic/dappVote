@@ -9,7 +9,7 @@ import { getContestants, getPoll } from '@/services/blockchain'
 import { ContestantStruct, PollStruct, RootState } from '@/utils/types'
 import { useDispatch, useSelector } from 'react-redux'
 import { globalActions } from '@/store/globalSlices'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import UpdatePoll from '@/components/UpdatePoll'
 import DeletePoll from '@/components/DeletePoll'
 import ChatButton from '@/components/ChatButton'
@@ -38,9 +38,8 @@ export default function Polls({
 
     const fetchData = async () => {
       if (typeof window !== 'undefined') {
-        const CometChat = (window as any).CometChat
         setTimeout(async () => {
-          const groupData = await getGroup(CometChat, `guid_${id}`)
+          const groupData = await getGroup(`guid_${id}`)
           if (groupData) dispatch(setGroup(JSON.parse(JSON.stringify(groupData))))
         }, 500)
       }

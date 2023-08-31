@@ -16,15 +16,15 @@ const ChatModal: React.FC<{ group: any }> = ({ group }) => {
   const [shouldAutoScroll, setShouldAutoScroll] = useState<boolean>(true)
 
   useEffect(() => {
-    const handleListing = (CometChat: any) => {
-      listenForMessage(CometChat, group?.guid).then((msg) => {
+    const handleListing = () => {
+      listenForMessage(group?.guid).then((msg) => {
         setMessages((prevMsgs) => [...prevMsgs, msg])
         setShouldAutoScroll(true)
       })
     }
 
-    const handleMessageRetrieval = (CometChat: any) => {
-      getMessages(CometChat, group?.guid).then((msgs) => {
+    const handleMessageRetrieval = () => {
+      getMessages(group?.guid).then((msgs) => {
         setMessages(msgs as any[])
         setShouldAutoScroll(true)
       })
@@ -32,9 +32,8 @@ const ChatModal: React.FC<{ group: any }> = ({ group }) => {
 
     setTimeout(async () => {
       if (typeof window !== 'undefined') {
-        const CometChat = (window as any).CometChat
-        handleMessageRetrieval(CometChat)
-        handleListing(CometChat)
+        handleMessageRetrieval()
+        handleListing()
       }
     }, 500)
   }, [dispatch, setCometChat, CometChat, group?.guid])
@@ -49,7 +48,7 @@ const ChatModal: React.FC<{ group: any }> = ({ group }) => {
     e.preventDefault()
     if (!message) return
 
-    await sendMessage(CometChat, group?.guid, message)
+    await sendMessage(group?.guid, message)
       .then((msg) => {
         setMessages((prevMsgs) => [...prevMsgs, msg])
         setShouldAutoScroll(true)

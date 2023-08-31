@@ -20,12 +20,12 @@ import { PollStruct, RootState } from '@/utils/types'
 const ChatButton: React.FC<{ poll: PollStruct; group: any }> = ({ poll, group }) => {
   const dispatch = useDispatch()
   const { setCurrentUser, setChatModal, setGroup } = globalActions
-  const { wallet, currentUser, CometChat } = useSelector((states: RootState) => states.globalStates)
+  const { wallet, currentUser } = useSelector((states: RootState) => states.globalStates)
 
   const handleSignUp = async () => {
     await toast.promise(
       new Promise((resolve, reject) => {
-        signUpWithCometChat(CometChat, wallet)
+        signUpWithCometChat(wallet)
           .then((user) => resolve(user))
           .catch((error) => {
             alert(JSON.stringify(error))
@@ -43,7 +43,7 @@ const ChatButton: React.FC<{ poll: PollStruct; group: any }> = ({ poll, group })
   const handleLogin = async () => {
     await toast.promise(
       new Promise((resolve, reject) => {
-        loginWithCometChat(CometChat, wallet)
+        loginWithCometChat(wallet)
           .then((user) => {
             dispatch(setCurrentUser(JSON.parse(JSON.stringify(user))))
             resolve(user)
@@ -64,7 +64,7 @@ const ChatButton: React.FC<{ poll: PollStruct; group: any }> = ({ poll, group })
   const handleLogout = async () => {
     await toast.promise(
       new Promise((resolve, reject) => {
-        logOutWithCometChat(CometChat)
+        logOutWithCometChat()
           .then(() => {
             dispatch(setCurrentUser(null))
             resolve(null)
@@ -85,7 +85,7 @@ const ChatButton: React.FC<{ poll: PollStruct; group: any }> = ({ poll, group })
   const handleCreateGroup = async () => {
     await toast.promise(
       new Promise((resolve, reject) => {
-        createNewGroup(CometChat, `guid_${poll.id}`, poll.title)
+        createNewGroup(`guid_${poll.id}`, poll.title)
           .then((group) => {
             dispatch(setGroup(JSON.parse(JSON.stringify(group))))
             resolve(group)
@@ -106,7 +106,7 @@ const ChatButton: React.FC<{ poll: PollStruct; group: any }> = ({ poll, group })
   const handleJoinGroup = async () => {
     await toast.promise(
       new Promise((resolve, reject) => {
-        joinGroup(CometChat, `guid_${poll.id}`)
+        joinGroup(`guid_${poll.id}`)
           .then((group) => {
             dispatch(setGroup(JSON.parse(JSON.stringify(group))))
             resolve(group)
