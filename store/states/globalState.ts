@@ -10,7 +10,6 @@ export const globalStates: GlobalState = {
   polls: [],
   poll: null,
   group: null,
-  CometChat: null,
   contestants: [],
   currentUser: null,
 }
