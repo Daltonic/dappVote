@@ -10,11 +10,8 @@ const Navbar = () => {
   return (
     <nav
       className="h-[80px] flex justify-between items-center border border-gray-400 
-      px-5 rounded-full"
+      px-5 rounded"
     >
-      <Link href="/" className="text-[20px] text-blue-800 sm:text-[24px]">
-        Dapp<span className="text-white font-bold">Votes</span>
-      </Link>
       {wallet ? (
         <button
           className="h-[48px] w-[130px] 

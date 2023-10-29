@@ -16,10 +16,9 @@ const Banner = () => {
 
   return (
     <main className="mx-auto text-center space-y-8">
-      <h1 className="text-[45px] font-[600px] text-center leading-none">Vote Without Rigging</h1>
+      <h1 className="text-[45px] font-[600px] text-center leading-none">Vote On Prompt</h1>
       <p className="text-[16px] font-[500px] text-center">
-        A beauty pageantry is a competition that has traditionally focused on judging and ranking
-        the physical...
+      Our project is a DApp that aims to democratize access to superintelligent systems that may emerge in the near future. On our website, users can propose new prompts or vote on existing ones by staking FLR tokens. The prompts are then submitted to an LLM via Flock SDK at regular intervals. Users can also view the history of all prompts and their responses from the connected LLM and in the future a superintelligent AI. We believe that everyone should have a say in what questions are asked to the AI, rather than letting a few powerful entities control it. This way, we can reduce the risk of misuse and abuse of the AI, and foster a more inclusive and transparent dialogue with it.
       </p>
 
       <button

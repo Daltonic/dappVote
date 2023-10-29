@@ -25,20 +25,18 @@ export default function Home({ pollsData }: { pollsData: PollStruct[] }) {
         <title>Available Polls</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="min-h-screen relative backdrop-blur">
-        <div
-          className="absolute inset-0 before:absolute before:inset-0
-        before:w-full before:h-full before:bg-[url('/assets/images/bg.jpeg')]
-        before:blur-sm before:z-[-1] before:bg-no-repeat before:bg-cover"
-        />
-
-        <section className="relative px-5 py-10 space-y-16 text-white sm:p-10">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-tr to-blue-700 from-indigo-900 p-10">
+  <div className="w-max">
+  <h1 className="animate-typing overflow-hidden whitespace-nowrap border-r-4 border-r-white pr-5 text-5xl text-white font-bold">
+      Oracle Vote</h1>
+        <section className="circles">
           <Navbar />
           <Banner />
           <Polls polls={polls} />
           <Footer />
         </section>
         <CreatePoll />
+      </div>
       </div>
     </>
   )
