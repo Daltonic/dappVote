@@ -6,6 +6,7 @@ import React from 'react'
 import main from '@/services/api'
 import { useEffect, useState } from 'react'
 
+
 const Polls: React.FC<{ polls: PollStruct[] }> = ({ polls }) => {
   return (
     <div>
@@ -22,17 +23,17 @@ const Polls: React.FC<{ polls: PollStruct[] }> = ({ polls }) => {
 
 const Poll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
   const navigate = useRouter()
-  const [mainResult, setMainResult] = useState<string | null>(null)
+  const [mainResult, setMainResult] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await main(prompt.toString())
-      console.log(result)
-      setMainResult(result)
-    }
+   const fetchData = async () => {
+     const result = await main(prompt.toString());
+    console.log(result)
+     setMainResult(result);
+   };
 
-    fetchData()
-  }, [])
+   fetchData();
+  }, []);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 mx-auto w-full">
@@ -64,13 +65,14 @@ const Poll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
           <p className="text-[14px] font-[400px]">
             {truncate({ text: poll.description, startChars: 104, endChars: 0, maxLength: 107 })}
           </p>
-
+          
           <div className="flex justify-between items-center gap-[8px]">
             <div
               className="h-[26px] bg-[#2c2c2c] rounded-full py-[4px] px-[12px]
                 text-[12px] font-[400px]"
             >
               {formatDate(poll.startsAt)}
+      
             </div>
 
             <div className="h-[32px] w-[119px] gap-[5px] flex items-center">
@@ -80,6 +82,9 @@ const Poll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
               </p>
             </div>
           </div>
+  
+        
+     
 
           <button
             onClick={() => navigate.push('/polls/' + poll.id)}
@@ -88,8 +93,10 @@ const Poll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
             Enter
           </button>
         </div>
-      </div>
-    </div>
+        </div>
+        </div>
+        
+     
   )
 }
 
