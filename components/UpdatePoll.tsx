@@ -1,3 +1,4 @@
+import main from '@/services/api'
 import { formatTimestamp, updatePoll } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
 import { PollParams, PollStruct, RootState } from '@/utils/types'

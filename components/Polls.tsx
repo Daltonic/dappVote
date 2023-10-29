@@ -3,6 +3,8 @@ import { formatDate, truncate } from '@/services/blockchain'
 import { PollStruct } from '@/utils/types'
 import { useRouter } from 'next/router'
 import React from 'react'
+import main from '@/services/api'
+import { useEffect, useState } from 'react'
 
 const Polls: React.FC<{ polls: PollStruct[] }> = ({ polls }) => {
   return (
@@ -17,8 +19,21 @@ const Polls: React.FC<{ polls: PollStruct[] }> = ({ polls }) => {
     </div>
   )
 }
+
 const Poll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
   const navigate = useRouter()
+  const [mainResult, setMainResult] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await main(prompt.toString())
+      console.log(result)
+      setMainResult(result)
+    }
+
+    fetchData()
+  }, [])
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 mx-auto w-full">
       <div
@@ -41,7 +56,7 @@ const Poll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
 
         <div
           className="w-full h-[257px] gap-[14px] rounded-[24px] space-y-5
-                md:w-[352px] md:h-[280px] bg-[#151515] px-[15px] py-[18px] md:px-[22px]"
+                md:w-[352px] md:h-[280px] bg-[#f5f4f4] px-[15px] py-[18px] md:px-[22px]"
         >
           <h1 className="text-[18px] font-[600px] capitalize">
             {truncate({ text: poll.title, startChars: 30, endChars: 0, maxLength: 33 })}
